@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4241b67160c024cfa9f7531eda86bcaf
+    m_Address: Assets/Prefabs/Base.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4f156675deb5c4d45a6f5941e659d1b0
     m_Address: Assets/Art/kenney_tiny-town/Tiles/GroundTiles
     m_ReadOnly: 0

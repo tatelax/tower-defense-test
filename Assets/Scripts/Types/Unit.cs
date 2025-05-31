@@ -11,12 +11,12 @@ namespace Types
     public (int x, int y) CurrTile { get; }
     public UnitType UnitType { get; }
 
-    public Unit(GameObject visual, bool isPlayerOwned, UnitType unitType)
+    public Unit(GameObject visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos)
     {
       Visual = visual;
       IsPlayerOwned = isPlayerOwned;
       UnitType = unitType;
-      CurrTile = MapSystem.WorldToTileSpace(visual.transform.position);
+      CurrTile = pos;
     }
   }
 }

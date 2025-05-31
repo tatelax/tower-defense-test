@@ -8,7 +8,7 @@ namespace Types
     public int Y { get; }
     public bool IsWalkable { get; }
     public GameObject GO { get; }
-    public Unit Unit { get; }
+    public Unit Unit { get; set; }
 
     public Tile(int x, int y, bool isWalkable, GameObject go)
     {

@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Orchestrator;
 using Types;
 using UnityEngine;
@@ -8,14 +8,19 @@ namespace Systems
 {
   public class UnitAISystem : ISystem
   {
-    private readonly List<Unit> _units = new ();
+    private MapSystem _mapSystem;
+    
+    public async UniTask Init()
+    {
+      _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
+    }
 
     public void Update()
     {
-      if (_units is null || _units.Count == 0)
+      if (_mapSystem.Units is null || _mapSystem.Units.Count == 0)
         return;
 
-      foreach (Unit unit in _units)
+      foreach (Unit unit in _mapSystem.Units)
       {
         if (unit.Target is null)
         {
@@ -27,26 +32,24 @@ namespace Systems
       }
     }
 
-    public void AddUnit(Unit unit) => _units.Add(unit);
-
     private bool FindTarget(Unit unit)
     {
       Unit closestTarget = null;
       int shortestDistance = Int32.MaxValue;
       
-      for (var i = 0; i < _units.Count; i++)
+      for (var i = 0; i < _mapSystem.Units.Count; i++)
       {
-        var comparisonUnit = _units[i];
+        var comparisonUnit = _mapSystem.Units[i];
         
         if(unit == comparisonUnit || comparisonUnit.IsPlayerOwned != !unit.IsPlayerOwned)
           continue;
 
-        int dist = MapSystem.DistanceBetweenSquaredTileSpace(unit.CurrTile, comparisonUnit.CurrTile);
+        int dist = MapSystem.DistanceBetween_TileSpace_Squared(unit.CurrTile, comparisonUnit.CurrTile);
         Debug.Log(dist);
         if (dist < shortestDistance)
         {
           shortestDistance = dist;
-          closestTarget = _units[i];
+          closestTarget = _mapSystem.Units[i];
         }
       }
 

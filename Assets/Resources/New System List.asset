@@ -12,4 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d48b3cc224e247c184e544a1a8915e4d, type: 3}
   m_Name: New System List
   m_EditorClassIdentifier: 
-  systemTypeReferences: []
+  systemTypeReferences:
+  - _typeName: Systems.MapSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  - _typeName: Systems.BaseSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  - _typeName: Systems.UISystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  - _typeName: Systems.UnitPlacementSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  - _typeName: Systems.UnitAISystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null

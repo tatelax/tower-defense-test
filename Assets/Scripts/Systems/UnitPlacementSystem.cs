@@ -17,7 +17,6 @@ namespace Systems
 
     private const float DragSpeed = 15.0f;
 
-    private UnitAISystem _unitAISystem;
     private MapSystem _mapSystem;
     
     private GameObject _currentUnitVisual;
@@ -26,7 +25,6 @@ namespace Systems
     public async UniTask Init()
     {
       var uiSystem = await Orchestrator.Orchestrator.GetSystemAsync<UISystem>();
-      _unitAISystem = await Orchestrator.Orchestrator.GetSystemAsync<UnitAISystem>();
       _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
       
       uiSystem.CanvasReferences.OnDragBegin += id => _ = OnDragBegin(id);
@@ -46,9 +44,13 @@ namespace Systems
       if (_currentUnitVisual is null)
         return;
 
-      var newUnit = new Unit(_currentUnitVisual, true, UnitType.Character);
-      
-      _unitAISystem.AddUnit(newUnit);
+      var newUnit = _mapSystem.CreateUnit(_currentUnitVisual, true, UnitType.Character);
+
+      if (newUnit == null)
+      {
+        Addressables.Release(_currentUnitVisual);
+      }
+
       _currentUnitVisual = null;
     }
 
@@ -58,19 +60,28 @@ namespace Systems
         return;
 
       Vector3 dragPos = GetDragPosInWorldSpace();
-      (int, int) targetPosInTileSpace = MapSystem.WorldToTileSpace(dragPos);
-      _targetPosInWorldSpace = MapSystem.TileToWorldSpace(targetPosInTileSpace);
+      _targetPosInWorldSpace = new Vector3(Mathf.RoundToInt(dragPos.x), 1, Mathf.RoundToInt(dragPos.y));
       
-      _currentUnitVisual.transform.position = Vector3.Lerp(_currentUnitVisual.transform.position, _targetPosInWorldSpace, DragSpeed * Time.deltaTime);
+      //_currentUnitVisual.transform.position = Vector3.Lerp(_currentUnitVisual.transform.position, _targetPosInWorldSpace, DragSpeed * Time.deltaTime);
+      _currentUnitVisual.transform.position = dragPos;
     }
     
     private Vector3 GetDragPosInWorldSpace()
     {
       Camera cam = Camera.main;
       Vector3 mouseScreen = Input.mousePosition;
-      mouseScreen.z = 0f;
-      Vector3 world = cam.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, cam.transform.position.y - 1));
-      return new Vector3(world.x, 1f, world.z);
+    
+      // Distance from camera Y to desired Y (which is 1)
+      float desiredY = 1f;
+      float camY = cam.transform.position.y;
+      float distance = camY - desiredY; // should be positive if camera is above the plane
+    
+      // Use screen X and Y, but set Z to the distance above the plane at Y=1
+      mouseScreen.z = distance;
+      Vector3 world = cam.ScreenToWorldPoint(mouseScreen);
+
+      // Snap or round as needed (for grid)
+      return new Vector3(Mathf.RoundToInt(world.x), desiredY, Mathf.RoundToInt(world.z));
     }
   }
 }

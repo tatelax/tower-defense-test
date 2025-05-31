@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Orchestrator;
 using Types;
@@ -8,10 +9,14 @@ namespace Systems
 {
     public class MapSystem : ISystem
     {
+        public const int SizeX = 11;
+        public const int SizeY = 11;
+        
+        public List<Unit> Units { get; private set; }
+
         private const string GroundSpriteAddress = "GroundTiles";
         private const string DetailSpriteAddress = "Assets/Art/kenney_tiny-town/Tiles/tile_0106.png";
     
-        private const int SizeX = 11, SizeY = 11;
         private const float BlockedChance = 0.11f;
 
         private readonly Tile[,] _map = new Tile[SizeX, SizeY];
@@ -21,6 +26,7 @@ namespace Systems
 
         public async UniTask Init()
         {
+            Units = new ();
             await GenerateMap();
         }
 
@@ -75,22 +81,81 @@ namespace Systems
             Addressables.Release(detailSprite);
         }
 
+        public void PlaceUnit(Unit unit, (int x, int y) pos)
+        {
+            if (!IsTileOpen(pos))
+            {
+                Debug.LogError("Failed to place unit because tile was occupied");
+                return;
+            }
+            
+            _map[pos.x, pos.y].Unit = unit;
+        }
+
+        public Unit CreateUnit(GameObject visual, bool isPlayerOwned, UnitType unitType)
+        {
+            var pos = WorldToTileSpace(visual.transform.position);
+            
+            if (!IsTileOpen(pos))
+            {
+                Debug.LogError($"Failed to create unit of type {unitType} at {pos} because tile was occupied");
+                return null;
+            }
+
+            var newUnit = new Unit(visual, isPlayerOwned, unitType, pos);
+            Units.Add(newUnit);
+
+            PlaceUnit(newUnit, newUnit.CurrTile);
+            
+            return newUnit;
+        }
+
+        public bool IsTileOpen((int x, int y) pos)
+        {
+            if (_map is null)
+                return false;
+
+            if (pos.x > SizeX - 1 || pos.x < 0)
+                return false;
+
+            if (pos.y > SizeY - 1 || pos.y < 0)
+                return false;
+
+            if (!IsWalkable(pos))
+                return false;
+            
+            return _map[pos.x, pos.y].Unit == null;
+        }
+
         public static (int, int) WorldToTileSpace(Vector3 world)
         {
-            return (Mathf.RoundToInt(world.x) - SizeX, Mathf.RoundToInt(world.z) - SizeY);
+            int tileX = Mathf.RoundToInt(world.x) + (SizeX - 1) / 2;
+            int tileY = Mathf.RoundToInt(world.z) + (SizeY - 1) / 2;
+            return (tileX, tileY);
         }
 
-        public static Vector3 TileToWorldSpace((int x, int y) pos)
+        public static Vector3 TileToWorldSpace((int x, int y) pos, float worldY = 1f)
         {
-            return new Vector3(pos.x + SizeX, 0, pos.y + SizeY);
+            float worldX = pos.x - (SizeX - 1) / 2f;
+            float worldZ = pos.y - (SizeY - 1) / 2f;
+            return new Vector3(worldX, worldY, worldZ);
         }
 
-        public static int DistanceBetweenSquaredTileSpace((int x, int y) a, (int x, int y) b)
+        public static int DistanceBetween_TileSpace_Squared((int x, int y) a, (int x, int y) b)
         {
             int dx = a.x - b.x;
             int dy = a.y - b.y;
             return dx * dx + dy * dy;
         }
+
+        public static int DistanceBetween_TileSpace((int x, int y) a, (int x, int y) b)
+        {
+            int dx = a.x - b.x;
+            int dy = a.y - b.y;
+            return Mathf.RoundToInt(Mathf.Sqrt(dx * dx + dy * dy));
+        }
+
+        public bool IsWalkable((int x, int y) pos) => _map[pos.x, pos.y].IsWalkable;
 
         // --- Endless pathfinding/movement loop ---
         // private async UniTask FindAndFollowPath()
