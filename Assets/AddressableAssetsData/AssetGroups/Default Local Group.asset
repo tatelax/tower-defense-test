@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_GUID: a7f343283c40644f29098785a8c8e222
+  m_SerializeEntries:
+  - m_GUID: 01ac621e2ead5465ab1ad92716269f18
+    m_Address: Assets/Art/kenney_tiny-town/Tiles/tile_0106.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4012dba137c8a4f62bc6b26f089413a7
+    m_Address: Assets/Prefabs/Units/Unit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f156675deb5c4d45a6f5941e659d1b0
+    m_Address: Assets/Art/kenney_tiny-town/Tiles/GroundTiles
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GroundTiles
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 934ed3c6de2c14d5eafea55ac5ef3b7c
+    m_Address: Assets/Prefabs/Canvas.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 47d7978b2c3ce4768a40cdff734d2d42, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b057b36b0234140369e4cb2da79ca4a3, type: 2}
+    - {fileID: 11400000, guid: 89730d824a2894e119af8f877371c9d8, type: 2}
