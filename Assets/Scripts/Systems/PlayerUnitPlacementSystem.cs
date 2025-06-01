@@ -6,7 +6,7 @@ using UnityEngine.AddressableAssets;
 
 namespace Systems
 {
-  public class UnitPlacementSystem : ISystem
+  public class PlayerUnitPlacementSystem : ISystem
   {
     private readonly string[] _unitAddresses = {
       "Assets/Prefabs/Units/Unit.prefab",

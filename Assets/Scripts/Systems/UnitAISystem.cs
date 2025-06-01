@@ -41,11 +41,11 @@ namespace Systems
       {
         var comparisonUnit = _mapSystem.Units[i];
         
-        if(unit == comparisonUnit || comparisonUnit.IsPlayerOwned != !unit.IsPlayerOwned)
+        if(unit == comparisonUnit || comparisonUnit.IsPlayerOwned != !unit.IsPlayerOwned || unit.UnitType != UnitType.Character)
           continue;
 
-        int dist = MapSystem.DistanceBetween_TileSpace_Squared(unit.CurrTile, comparisonUnit.CurrTile);
-        Debug.Log(dist);
+        int dist = MapSystem.DistanceBetween_TileSpace(unit.CurrTile, comparisonUnit.CurrTile);
+
         if (dist < shortestDistance)
         {
           shortestDistance = dist;

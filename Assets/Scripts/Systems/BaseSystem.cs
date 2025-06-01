@@ -13,7 +13,6 @@ namespace Systems
     private const ushort numBases = 2;
     
     private MapSystem _mapSystem;
-    private ushort _placedBases;
     
     public async UniTask Init()
     {
@@ -24,31 +23,48 @@ namespace Systems
 
     private async UniTask PlaceBases()
     {
-      for (int x = 2; x < MapSystem.SizeX; x++) 
+      ushort playerBases = 0;
+      ushort enemyBases = 0;
+
+      // Player bases (top half)
+      for (int x = 2; x < MapSystem.SizeX && playerBases < numBases; x++)
       {
-        for (int y = 2; y < MapSystem.SizeY / 2 - 1; y++)
+        for (int y = 2; y < MapSystem.SizeY / 2 - 1 && playerBases < numBases; y++)
         {
           if (!_mapSystem.IsTileOpen((x, y))) continue;
-          
+
           var spawnPos = MapSystem.TileToWorldSpace((x, y));
           var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
+          _ = _mapSystem.CreateUnit(visual, true, UnitType.Base);
 
-          _ = _mapSystem.CreateUnit(visual, false, UnitType.Base);
-            
-          _placedBases++;
-            
-          if (_placedBases != numBases)
+          playerBases++;
+
+          if (playerBases < numBases)
           {
             x += minimumBaseSpacing;
           }
-          else
+        }
+      }
+
+      // Enemy bases (bottom half)
+      for (int x = MapSystem.SizeX - 1; x > 0 && enemyBases < numBases; x--)
+      {
+        for (int y = MapSystem.SizeY - 1; y > 0 && enemyBases < numBases; y--)
+        {
+          if (!_mapSystem.IsTileOpen((x, y))) continue;
+
+          var spawnPos = MapSystem.TileToWorldSpace((x, y));
+          var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
+          _ = _mapSystem.CreateUnit(visual, false, UnitType.Base);
+
+          enemyBases++;
+
+          if (enemyBases < numBases)
           {
-            return;
+            x -= minimumBaseSpacing;
           }
         }
       }
-      
-      Debug.LogError("Unable to place bases for some reason");
     }
   }
 }
