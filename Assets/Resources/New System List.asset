@@ -19,7 +19,7 @@ MonoBehaviour:
       PublicKeyToken=null
   - _typeName: Systems.UISystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-  - _typeName: Systems.UnitPlacementSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   - _typeName: Systems.UnitAISystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  - _typeName: Systems.PlayerUnitPlacementSystem, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

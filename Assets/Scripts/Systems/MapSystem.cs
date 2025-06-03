@@ -13,7 +13,8 @@ namespace Systems
         public const int SizeY = 11;
         
         public List<Unit> Units { get; private set; }
-
+        public Tile[,] Map => _map;
+        
         private const string GroundSpriteAddress = "GroundTiles";
         private const string DetailSpriteAddress = "Assets/Art/kenney_tiny-town/Tiles/tile_0106.png";
     
@@ -88,8 +89,17 @@ namespace Systems
                 Debug.LogError("Failed to place unit because tile was occupied");
                 return;
             }
+
+            // Make wherever the unit is now null because this will become the previous location
+            _map[unit.CurrTile.x, unit.CurrTile.y].Unit = null;
             
+            // Make the desired location now occupied by the unit
             _map[pos.x, pos.y].Unit = unit;
+            
+            Debug.Log($"placed at {pos}. IsWalkable = {_map[pos.x, pos.y].IsWalkable}");
+            
+            // Actually update the unit to the tile it's on
+            unit.CurrTile = pos;
         }
 
         public Unit CreateUnit(GameObject visual, bool isPlayerOwned, UnitType unitType)
@@ -115,10 +125,10 @@ namespace Systems
             if (_map is null)
                 return false;
 
-            if (pos.x > SizeX - 1 || pos.x < 0)
+            if (pos.x is > SizeX - 1 or < 0)
                 return false;
 
-            if (pos.y > SizeY - 1 || pos.y < 0)
+            if (pos.y is > SizeY - 1 or < 0)
                 return false;
 
             if (!IsWalkable(pos))

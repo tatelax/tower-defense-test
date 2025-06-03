@@ -6,7 +6,7 @@ namespace Types
   {
     public int X { get; }
     public int Y { get; }
-    public bool IsWalkable { get; }
+    public bool IsWalkable { get; set; }
     public GameObject GO { get; }
     public Unit Unit { get; set; }
 
