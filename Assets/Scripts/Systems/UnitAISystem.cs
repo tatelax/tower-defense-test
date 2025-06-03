@@ -54,7 +54,7 @@ namespace Systems
                     unit.CurrentPathIndex = 0;
                 }
 
-                if (unit.CurrentPathIndex > unit.CurrentPath.Count - 1)
+                if (unit.CurrentPathIndex > unit.CurrentPath.Count - 1 || unit.CurrentPath.Count == 0)
                 {
                     Debug.Log("Path end reached");
                     continue;

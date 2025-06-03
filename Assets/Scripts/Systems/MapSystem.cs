@@ -86,7 +86,14 @@ namespace Systems
         {
             if (!IsTileOpen(pos))
             {
-                Debug.LogError("Failed to place unit because tile was occupied");
+                var tile = _map[pos.x, pos.y];
+                
+                if(tile.Unit is not null)
+                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile was occupied by {tile.Unit.GetHashCode()}");
+                
+                if(!tile.IsWalkable)
+                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile is not walkable");
+                    
                 return;
             }
 
