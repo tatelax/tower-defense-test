@@ -10,6 +10,7 @@ namespace Systems
     public class UnitAISystem : ISystem
     {
         private const float MoveSpeed = 5.0f;
+        private const float RotateSpeed = 10.0f;
         
         private MapSystem _mapSystem;
 
@@ -84,7 +85,11 @@ namespace Systems
                     // Snap the visual to the tile it's supposed to be in
                     var tilePos = MapSystem.WorldToTileSpace(unit.CurrentPath[unit.CurrentPathIndex]);
                     var worldPos = MapSystem.TileToWorldSpace(tilePos);
-                    unit.Visual.transform.position = worldPos;
+
+                    var finalRot = Quaternion.LookRotation(unit.Target.Visual.transform.position - unit.Visual.transform.position);
+                    var finalRotSmoothed = Quaternion.Slerp(unit.Visual.transform.rotation, finalRot, Time.deltaTime * RotateSpeed);
+                    
+                    unit.Visual.transform.SetPositionAndRotation(worldPos, finalRotSmoothed);
                     continue;
                 }
                 
@@ -95,9 +100,14 @@ namespace Systems
                 if (distToNextWayPoint < 0.001f)
                     unit.CurrentPathIndex++;
 
-                unit.Visual.transform.position = Vector3.MoveTowards(unit.Visual.transform.position, 
+                var newPos = Vector3.MoveTowards(unit.Visual.transform.position, 
                     unit.CurrentPath[unit.CurrentPathIndex + 1], 
                     Time.deltaTime * MoveSpeed);
+                
+                var newRot = Quaternion.LookRotation(unit.CurrentPath[unit.CurrentPathIndex + 1] - unit.Visual.transform.position);
+                var newRotSmoothed = Quaternion.Slerp(unit.Visual.transform.rotation, newRot, Time.deltaTime * RotateSpeed);
+                
+                unit.Visual.transform.SetPositionAndRotation(newPos, newRotSmoothed);
                 
                 unit.SetState(UnitState.Navigating);
                     
