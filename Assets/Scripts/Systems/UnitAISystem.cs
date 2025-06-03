@@ -28,8 +28,22 @@ namespace Systems
                 if (unit.UnitType != UnitType.Character)
                     continue;
 
-                if (!FindTarget(unit))
+                var closestTarget = FindClosestTarget(unit);
+                
+                // No target found. Do nothing
+                if (closestTarget is null)
+                {
+                    unit.SetState(UnitState.Idle);
                     continue;
+                }
+
+                // We found a new target. Reset the path and index
+                if (closestTarget != unit.Target)
+                {
+                    unit.CurrentPath = null;
+                    unit.CurrentPathIndex = 0;
+                    unit.Target = closestTarget;
+                }
 
                 var tileVisualIsIn = MapSystem.WorldToTileSpace(unit.Visual.transform.position);
                 
@@ -65,7 +79,7 @@ namespace Systems
 
                 if (unit.CurrentPathIndex + 1 >= unit.CurrentPath.Count - 1 || unit.CurrentPath.Count == 0)
                 {
-                    //Debug.Log("Path end reached");
+                    unit.SetState(UnitState.Attacking);
                     
                     // Snap the visual to the tile it's supposed to be in
                     var tilePos = MapSystem.WorldToTileSpace(unit.CurrentPath[unit.CurrentPathIndex]);
@@ -84,17 +98,16 @@ namespace Systems
                 unit.Visual.transform.position = Vector3.MoveTowards(unit.Visual.transform.position, 
                     unit.CurrentPath[unit.CurrentPathIndex + 1], 
                     Time.deltaTime * MoveSpeed);
+                
+                unit.SetState(UnitState.Navigating);
                     
                 for (var i = 0; i < unit.CurrentPath.Count - 1; i++)
                     Debug.DrawLine(unit.CurrentPath[i], unit.CurrentPath[i + 1], Color.magenta);
             }
         }
 
-        private bool FindTarget(Unit unit)
+        private Unit FindClosestTarget(Unit unit)
         {
-            if (unit.Target is not null)
-                return true;
-            
             Unit closestTarget = null;
             int shortestDistance = Int32.MaxValue;
 
@@ -104,15 +117,14 @@ namespace Systems
                     continue;
 
                 int dist = MapSystem.DistanceBetween_TileSpace(unit.CurrTile, comparisonUnit.CurrTile);
-                if (dist < shortestDistance)
-                {
-                    shortestDistance = dist;
-                    closestTarget = comparisonUnit;
-                }
+                
+                if (dist >= shortestDistance) continue;
+                
+                shortestDistance = dist;
+                closestTarget = comparisonUnit;
             }
 
-            unit.Target = closestTarget;
-            return closestTarget != null;
+            return closestTarget;
         }
     }
 }

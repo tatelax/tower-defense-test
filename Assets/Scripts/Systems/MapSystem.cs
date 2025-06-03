@@ -11,8 +11,8 @@ namespace Systems
     {
         public const int SizeX = 11;
         public const int SizeY = 11;
-        
-        public List<Unit> Units { get; private set; }
+
+        public HashSet<Unit> Units { get; private set; }
         public Tile[,] Map => _map;
         
         private const string GroundSpriteAddress = "GroundTiles";
@@ -127,6 +127,32 @@ namespace Systems
             PlaceUnit(newUnit, newUnit.CurrTile);
             
             return newUnit;
+        }
+
+        public void AttackTarget(Unit unit)
+        {
+            if (unit.Target is null)
+            {
+                Debug.LogError("Tried to attack target when there was none.");
+                return;
+            }
+
+            unit.Target.Damage(unit.Stats.Strength);
+
+            if (unit.Target.Stats.CurrHealth <= 0)
+            {
+                // TODO: Use pooling
+                GameObject.Destroy(unit.Target.Visual);
+                _map[unit.Target.CurrTile.x, unit.Target.CurrTile.y].Unit = null;
+
+                Run().Forget();
+                
+                async UniTask Run()
+                {
+                    await UniTask.Yield();
+                    Units.Remove(unit.Target);
+                }
+            }
         }
 
         public bool IsTileOpen((int x, int y) pos)
