@@ -89,10 +89,10 @@ namespace Systems
                 var tile = _map[pos.x, pos.y];
                 
                 if(tile.Unit is not null)
-                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile was occupied by {tile.Unit.GetHashCode()}");
+                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile {pos} was occupied by {tile.Unit.GetHashCode()}");
                 
                 if(!tile.IsWalkable)
-                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile is not walkable");
+                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile {pos} is not walkable");
                     
                 return;
             }
@@ -122,6 +122,8 @@ namespace Systems
             var newUnit = new Unit(visual, isPlayerOwned, unitType, pos);
             Units.Add(newUnit);
 
+            visual.gameObject.name = $"{unitType} Unit ({newUnit.GetHashCode()})";
+            
             PlaceUnit(newUnit, newUnit.CurrTile);
             
             return newUnit;
@@ -173,145 +175,5 @@ namespace Systems
         }
 
         public bool IsWalkable((int x, int y) pos) => _map[pos.x, pos.y].IsWalkable;
-
-        // --- Endless pathfinding/movement loop ---
-        // private async UniTask FindAndFollowPath()
-        // {
-        //     while (true)
-        //     {
-        //         // Find a random walkable destination different from current
-        //         do
-        //         {
-        //             int dx = rng.Next(SizeX);
-        //             int dy = rng.Next(SizeY);
-        //             endPos = (dx, dy);
-        //         }
-        //         while (endPos == startPos || !_map[endPos.x, endPos.y].IsWalkable);
-        //
-        //         // Highlight start/end
-        //         ResetTileColors();
-        //         _tileGos[startPos.x, startPos.y].GetComponent<SpriteRenderer>().color = Color.green;
-        //         _tileGos[endPos.x, endPos.y].GetComponent<SpriteRenderer>().color = Color.cyan;
-        //
-        //         // Find path
-        //         path = Pathfinder.FindPath(_map, startPos, endPos);
-        //
-        //         if (path == null || path.Count < 2)
-        //         {
-        //             // If no path found, pick a new destination next frame
-        //             await UniTask.Delay(250);
-        //             continue;
-        //         }
-        //
-        //         // Set up spline path
-        //         pathPoints = new List<Vector3>();
-        //         foreach (var (x, y) in path)
-        //             pathPoints.Add(new Vector3(x, 0.5f, y));
-        //         pathPoints.Insert(0, pathPoints[0]);
-        //         pathPoints.Add(pathPoints[pathPoints.Count - 1]);
-        //         ComputeSegmentLengths();
-        //         pathT = 0f;
-        //
-        //         // Move along the curve
-        //         bool finished = false;
-        //         while (!finished)
-        //         {
-        //             float speedThisFrame = moveSpeed * Time.deltaTime / pathLength;
-        //             pathT += speedThisFrame;
-        //             pathT = Mathf.Min(pathT, 1f);
-        //
-        //             // Find spline segment
-        //             float scaledT = pathT * (pathPoints.Count - 3);
-        //             int seg = Mathf.FloorToInt(scaledT);
-        //             float t = scaledT - seg;
-        //
-        //             if (seg >= pathPoints.Count - 3)
-        //             {
-        //                 moverCube.transform.position = pathPoints[pathPoints.Count - 2];
-        //                 finished = true;
-        //                 break;
-        //             }
-        //
-        //             Vector3 pos = CatmullRom(
-        //                 pathPoints[seg],
-        //                 pathPoints[seg + 1],
-        //                 pathPoints[seg + 2],
-        //                 pathPoints[seg + 3],
-        //                 t
-        //             );
-        //             moverCube.transform.position = pos;
-        //
-        //             // Optional: rotate cube to face direction of movement
-        //             if (seg < pathPoints.Count - 4)
-        //             {
-        //                 Vector3 next = CatmullRom(
-        //                     pathPoints[seg],
-        //                     pathPoints[seg + 1],
-        //                     pathPoints[seg + 2],
-        //                     pathPoints[seg + 3],
-        //                     Mathf.Min(t + 0.01f, 1f)
-        //                 );
-        //                 Vector3 dir = next - pos;
-        //                 if (dir.sqrMagnitude > 0.0001f)
-        //                     moverCube.transform.forward = dir.normalized;
-        //             }
-        //
-        //             await UniTask.Yield();
-        //         }
-        //
-        //         // After arrival, make this node the new start for the next leg
-        //         startPos = endPos;
-        //         await UniTask.Delay(300); // Brief pause before new path
-        //     }
-        // }
-        //
-        // // --- Helper functions ---
-        // private void ResetTileColors()
-        // {
-        //     for (int x = 0; x < SizeX; x++)
-        //     for (int y = 0; y < SizeY; y++)
-        //     {
-        //         var r = _tileGos[x, y].GetComponent<SpriteRenderer>();
-        //         r.color = _map[x, y].IsWalkable ? Color.white : Color.gray;
-        //     }
-        // }
-        //
-        // private void ComputeSegmentLengths()
-        // {
-        //     pathLength = 0f;
-        //     segmentLengths = new List<float>();
-        //     int segments = pathPoints.Count - 3;
-        //     Vector3 prev = pathPoints[1];
-        //     int samples = 10;
-        //     for (int seg = 0; seg < segments; seg++)
-        //     {
-        //         float segLen = 0f;
-        //         for (int i = 1; i <= samples; i++)
-        //         {
-        //             float t = i / (float)samples;
-        //             Vector3 p = CatmullRom(
-        //                 pathPoints[seg],
-        //                 pathPoints[seg + 1],
-        //                 pathPoints[seg + 2],
-        //                 pathPoints[seg + 3],
-        //                 t
-        //             );
-        //             segLen += Vector3.Distance(prev, p);
-        //             prev = p;
-        //         }
-        //         segmentLengths.Add(segLen);
-        //         pathLength += segLen;
-        //     }
-        // }
-
-        public static Vector3 CatmullRom(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
-        {
-            return 0.5f * (
-                (2f * p1) +
-                (-p0 + p2) * t +
-                (2f * p0 - 5f * p1 + 4f * p2 - p3) * (t * t) +
-                (-p0 + 3f * p1 - 3f * p2 + p3) * (t * t * t)
-            );
-        }
     }
 }

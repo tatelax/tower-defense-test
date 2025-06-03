@@ -35,8 +35,17 @@ namespace Systems
                 
                 if (tileVisualIsIn != unit.CurrTile || unit.CurrentPath is null)
                 {
-                    if(tileVisualIsIn != unit.CurrTile)
-                        _mapSystem.PlaceUnit(unit, tileVisualIsIn);
+                    if (tileVisualIsIn != unit.CurrTile)
+                    {
+                        if (_mapSystem.IsTileOpen(tileVisualIsIn))
+                        {
+                            _mapSystem.PlaceUnit(unit, tileVisualIsIn);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
                     
                     var path = Pathfinder.FindPath(unit, _mapSystem.Map, unit.CurrTile, unit.Target.CurrTile);
 
@@ -54,32 +63,38 @@ namespace Systems
                     unit.CurrentPathIndex = 0;
                 }
 
-                if (unit.CurrentPathIndex > unit.CurrentPath.Count - 1 || unit.CurrentPath.Count == 0)
+                if (unit.CurrentPathIndex + 1 >= unit.CurrentPath.Count - 1 || unit.CurrentPath.Count == 0)
                 {
-                    Debug.Log("Path end reached");
+                    //Debug.Log("Path end reached");
+                    
+                    // Snap the visual to the tile it's supposed to be in
+                    var tilePos = MapSystem.WorldToTileSpace(unit.CurrentPath[unit.CurrentPathIndex]);
+                    var worldPos = MapSystem.TileToWorldSpace(tilePos);
+                    unit.Visual.transform.position = worldPos;
                     continue;
                 }
                 
-                var distToNextWayPoint = Vector3.Distance(unit.Visual.transform.position, unit.CurrentPath[unit.CurrentPathIndex]);
+                var distToNextWayPoint = Vector3.Distance(unit.Visual.transform.position, unit.CurrentPath[unit.CurrentPathIndex + 1]);
 
+                // If we're close to the next point in the smoothed path, set out target to the next point.
+                // We just need to be more accurate than the distance between each vertex in the spline
                 if (distToNextWayPoint < 0.001f)
                     unit.CurrentPathIndex++;
 
-                unit.Visual.transform.position = Vector3.MoveTowards(unit.Visual.transform.position, unit.CurrentPath[unit.CurrentPathIndex], Time.deltaTime * MoveSpeed);
+                unit.Visual.transform.position = Vector3.MoveTowards(unit.Visual.transform.position, 
+                    unit.CurrentPath[unit.CurrentPathIndex + 1], 
+                    Time.deltaTime * MoveSpeed);
                     
-                // check if we're in a new tile
-                // if we are, reset the spline index to zero and do pathfinding again
-                // otherwise just keep moving the visual
-                
                 for (var i = 0; i < unit.CurrentPath.Count - 1; i++)
-                {
                     Debug.DrawLine(unit.CurrentPath[i], unit.CurrentPath[i + 1], Color.magenta);
-                }
             }
         }
 
         private bool FindTarget(Unit unit)
         {
+            if (unit.Target is not null)
+                return true;
+            
             Unit closestTarget = null;
             int shortestDistance = Int32.MaxValue;
 
