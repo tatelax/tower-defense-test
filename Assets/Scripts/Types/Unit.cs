@@ -13,16 +13,18 @@ namespace Types
     public GameObject Visual { get; }
     public bool IsPlayerOwned { get; }
     public UnitType UnitType { get; }
+    public int Radius { get; }
     public Stats Stats { get; }
 
     public List<Vector3> CurrentPath { get; set; }
     public int CurrentPathIndex { get; set; }
-    public Unit(GameObject visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos, float defense = 1, float attackSpeed = 1, float strength = 25)
+    public Unit(GameObject visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos, int radius = 1, float defense = 1, float attackSpeed = 1, float strength = 25)
     {
       Visual = visual;
       IsPlayerOwned = isPlayerOwned;
       UnitType = unitType;
       CurrTile = pos;
+      Radius = radius;
 
       Stats = new Stats(100, defense, attackSpeed, strength);
       State = UnitState.Idle;

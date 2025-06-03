@@ -6,65 +6,65 @@ using UnityEngine.AddressableAssets;
 
 namespace Systems
 {
-  public class BaseSystem: ISystem
-  {
-    private const string BaseAddress = "Assets/Prefabs/Base.prefab";
-    private const ushort minimumBaseSpacing = 3;
-    private const ushort numBases = 2;
-    
-    private MapSystem _mapSystem;
-    
-    public async UniTask Init()
+    public class BaseSystem : ISystem
     {
-      _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
+        private const string BaseAddress = "Assets/Prefabs/Base.prefab";
+        private const ushort minimumBaseSpacing = 3;
+        private const ushort numBases = 2;
+        private const int baseRadius = 2;
 
-      await PlaceBases();
-    }
+        private MapSystem _mapSystem;
 
-    private async UniTask PlaceBases()
-    {
-      ushort playerBases = 0;
-      ushort enemyBases = 0;
-
-      // Player bases (top half)
-      for (int x = 2; x < MapSystem.SizeX && playerBases < numBases; x++)
-      {
-        for (int y = 2; y < MapSystem.SizeY / 2 - 1 && playerBases < numBases; y++)
+        public async UniTask Init()
         {
-          if (!_mapSystem.IsTileOpen((x, y))) continue;
-
-          var spawnPos = MapSystem.TileToWorldSpace((x, y));
-          var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
-          _ = _mapSystem.CreateUnit(visual, true, UnitType.Base);
-
-          playerBases++;
-
-          if (playerBases < numBases)
-          {
-            x += minimumBaseSpacing;
-          }
+            _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
+            await PlaceBases();
         }
-      }
 
-      // Enemy bases (bottom half)
-      for (int x = MapSystem.SizeX - 1; x > 0 && enemyBases < numBases; x--)
-      {
-        for (int y = MapSystem.SizeY - 1; y > 0 && enemyBases < numBases; y--)
+        private async UniTask PlaceBases()
         {
-          if (!_mapSystem.IsTileOpen((x, y))) continue;
+            ushort playerBases = 0;
+            ushort enemyBases = 0;
 
-          var spawnPos = MapSystem.TileToWorldSpace((x, y));
-          var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
-          _ = _mapSystem.CreateUnit(visual, false, UnitType.Base);
+            // Player bases
+            for (int x = 2; x < MapSystem.SizeX && playerBases < numBases; x++)
+            {
+                for (int y = 2; y < MapSystem.SizeY / 2 - 1 && playerBases < numBases; y++)
+                {
+                    if (!_mapSystem.IsTileOpen((x, y), baseRadius)) continue;
 
-          enemyBases++;
+                    var spawnPos = MapSystem.TileToWorldSpace((x, y));
+                    var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
+                    _ = _mapSystem.CreateUnit(visual, true, UnitType.Base, baseRadius);
 
-          if (enemyBases < numBases)
-          {
-            x -= minimumBaseSpacing;
-          }
+                    playerBases++;
+
+                    if (playerBases < numBases)
+                    {
+                        x += minimumBaseSpacing;
+                    }
+                }
+            }
+
+            // Enemy bases
+            for (int x = MapSystem.SizeX - 1; x > 0 && enemyBases < numBases; x--)
+            {
+                for (int y = MapSystem.SizeY - 1; y > 0 && enemyBases < numBases; y--)
+                {
+                    if (!_mapSystem.IsTileOpen((x, y), baseRadius)) continue;
+
+                    var spawnPos = MapSystem.TileToWorldSpace((x, y));
+                    var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
+                    _ = _mapSystem.CreateUnit(visual, false, UnitType.Base, baseRadius);
+
+                    enemyBases++;
+
+                    if (enemyBases < numBases)
+                    {
+                        x -= minimumBaseSpacing;
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

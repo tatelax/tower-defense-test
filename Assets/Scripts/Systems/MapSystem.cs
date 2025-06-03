@@ -17,7 +17,6 @@ namespace Systems
         
         private const string GroundSpriteAddress = "GroundTiles";
         private const string DetailSpriteAddress = "Assets/Art/kenney_tiny-town/Tiles/tile_0106.png";
-    
         private const float BlockedChance = 0.11f;
 
         private readonly Tile[,] _map = new Tile[SizeX, SizeY];
@@ -82,50 +81,69 @@ namespace Systems
             Addressables.Release(detailSprite);
         }
 
-        public void PlaceUnit(Unit unit, (int x, int y) pos)
+        private List<(int x, int y)> GetTilesCovered((int x, int y) center, int radius)
         {
-            if (!IsTileOpen(pos))
+            var tiles = new List<(int x, int y)>();
+            int r2 = radius * radius;
+            for (int dx = -radius + 1; dx < radius; dx++)
             {
-                var tile = _map[pos.x, pos.y];
-                
-                if(tile.Unit is not null)
-                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile {pos} was occupied by {tile.Unit.GetHashCode()}");
-                
-                if(!tile.IsWalkable)
-                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} because tile {pos} is not walkable");
-                    
-                return;
+                for (int dy = -radius + 1; dy < radius; dy++)
+                {
+                    int tx = center.x + dx;
+                    int ty = center.y + dy;
+                    if (tx >= 0 && tx < SizeX && ty >= 0 && ty < SizeY)
+                    {
+                        if (dx * dx + dy * dy < r2)
+                            tiles.Add((tx, ty));
+                    }
+                }
             }
-
-            // Make wherever the unit is now null because this will become the previous location
-            _map[unit.CurrTile.x, unit.CurrTile.y].Unit = null;
-            
-            // Make the desired location now occupied by the unit
-            _map[pos.x, pos.y].Unit = unit;
-            
-            Debug.Log($"placed at {pos}. IsWalkable = {_map[pos.x, pos.y].IsWalkable}");
-            
-            // Actually update the unit to the tile it's on
-            unit.CurrTile = pos;
+            return tiles;
         }
 
-        public Unit CreateUnit(GameObject visual, bool isPlayerOwned, UnitType unitType)
+        public void PlaceUnit(Unit unit, (int x, int y) pos)
+        {
+            var newTiles = GetTilesCovered(pos, unit.Radius);
+            var oldTiles = GetTilesCovered(unit.CurrTile, unit.Radius);
+
+            foreach (var tile in oldTiles)
+            {
+                if (_map[tile.x, tile.y].Unit == unit)
+                    _map[tile.x, tile.y].Unit = null;
+            }
+
+            foreach (var tile in newTiles)
+            {
+                if (!IsWalkable(tile) || (_map[tile.x, tile.y].Unit != null && _map[tile.x, tile.y].Unit != unit))
+                {
+                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} at {tile} (radius {unit.Radius})");
+                    return;
+                }
+            }
+
+            foreach (var tile in newTiles)
+                _map[tile.x, tile.y].Unit = unit;
+
+            unit.CurrTile = pos;
+            Debug.Log($"placed at {pos}. IsWalkable = {_map[pos.x, pos.y].IsWalkable}");
+        }
+
+        public Unit CreateUnit(GameObject visual, bool isPlayerOwned, UnitType unitType, int radius = 1)
         {
             var pos = WorldToTileSpace(visual.transform.position);
-            
-            if (!IsTileOpen(pos))
+
+            if (!IsTileOpen(pos, radius))
             {
                 Debug.LogError($"Failed to create unit of type {unitType} at {pos} because tile was occupied");
                 return null;
             }
 
-            var newUnit = new Unit(visual, isPlayerOwned, unitType, pos);
+            var newUnit = new Unit(visual, isPlayerOwned, unitType, pos, radius);
             Units.Add(newUnit);
 
             visual.gameObject.name = $"{unitType} Unit ({newUnit.GetHashCode()})";
-            
             PlaceUnit(newUnit, newUnit.CurrTile);
-            
+
             return newUnit;
         }
 
@@ -141,12 +159,15 @@ namespace Systems
 
             if (unit.Target.Stats.CurrHealth <= 0)
             {
-                // TODO: Use pooling
+                foreach (var tile in GetTilesCovered(unit.Target.CurrTile, unit.Target.Radius))
+                {
+                    if (_map[tile.x, tile.y].Unit == unit.Target)
+                        _map[tile.x, tile.y].Unit = null;
+                }
+
                 GameObject.Destroy(unit.Target.Visual);
-                _map[unit.Target.CurrTile.x, unit.Target.CurrTile.y].Unit = null;
 
                 Run().Forget();
-                
                 async UniTask Run()
                 {
                     await UniTask.Yield();
@@ -155,21 +176,17 @@ namespace Systems
             }
         }
 
-        public bool IsTileOpen((int x, int y) pos)
+        public bool IsTileOpen((int x, int y) pos, int radius = 1)
         {
-            if (_map is null)
-                return false;
-
-            if (pos.x is > SizeX - 1 or < 0)
-                return false;
-
-            if (pos.y is > SizeY - 1 or < 0)
-                return false;
-
-            if (!IsWalkable(pos))
-                return false;
-            
-            return _map[pos.x, pos.y].Unit == null;
+            var tiles = GetTilesCovered(pos, radius);
+            foreach (var tile in tiles)
+            {
+                if (tile.x < 0 || tile.x >= SizeX || tile.y < 0 || tile.y >= SizeY)
+                    return false;
+                if (!IsWalkable(tile) || _map[tile.x, tile.y].Unit != null)
+                    return false;
+            }
+            return true;
         }
 
         public static (int, int) WorldToTileSpace(Vector3 world)

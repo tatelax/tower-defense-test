@@ -16,7 +16,6 @@ public class Node
 
 public class Pathfinder
 {
-    // 8-way movement
     static int[,] directions = new int[,]
     {
         { 0, 1 },  { 1, 1 },  { 1, 0 },  { 1, -1 },
@@ -35,7 +34,7 @@ public class Pathfinder
         var startNode = new Node(start.x, start.y, 0, Heuristic(start.x, start.y, goal.x, goal.y));
         open.Add((startNode.Priority, counter++, startNode));
 
-        Node furthestNode = null; // Best node found closest to the goal
+        Node furthestNode = null;
         int bestHeuristic = int.MaxValue;
 
         while (open.Count > 0)
@@ -43,19 +42,16 @@ public class Pathfinder
             var current = open.Min.node;
             open.Remove(open.Min);
 
-            // If goal is reached and is walkable, return path
             if ((current.X, current.Y) == goal)
             {
-                if (map[goal.x, goal.y].Unit == null) // goal is open
+                if (IsAreaOpen(map, goal.x, goal.y, unit.Radius)) // Goal is open
                 {
                     return ReconstructPath(current);
                 }
-                // else: fall through, treat as blocked and find closest
             }
 
             closed.Add((current.X, current.Y));
 
-            // Always track the closest node we've gotten to the goal
             int h = Heuristic(current.X, current.Y, goal.x, goal.y);
             if (h < bestHeuristic)
             {
@@ -70,12 +66,9 @@ public class Pathfinder
 
                 if (nx < 0 || nx >= width || ny < 0 || ny >= height)
                     continue;
-                if (!map[nx, ny].IsWalkable)
-                    continue;
 
-                // Treat ANY occupied tile (except our own position) as blocked
-                // This includes the goal if it's occupied
-                if (map[nx, ny].Unit != null && (nx != start.x || ny != start.y))
+                bool isSelf = (nx == start.x && ny == start.y);
+                if (!IsAreaOpen(map, nx, ny, unit.Radius, isSelf ? unit : null))
                     continue;
 
                 if (closed.Contains((nx, ny)))
@@ -89,7 +82,7 @@ public class Pathfinder
                     int ex = current.X;
                     int ey = current.Y + directions[i, 1];
                     if (!IsInBounds(sx, sy, width, height) || !IsInBounds(ex, ey, width, height)) continue;
-                    if (!map[sx, sy].IsWalkable || !map[ex, ey].IsWalkable)
+                    if (!IsAreaOpen(map, sx, sy, unit.Radius, isSelf ? unit : null) || !IsAreaOpen(map, ex, ey, unit.Radius, isSelf ? unit : null))
                         continue;
                 }
 
@@ -99,12 +92,11 @@ public class Pathfinder
             }
         }
 
-        // If we could not reach the goal, return the path to the furthest node found
         return furthestNode != null ? ReconstructPath(furthestNode) : null;
     }
 
     static int Heuristic(int x, int y, int gx, int gy)
-        => Math.Max(Math.Abs(x - gx), Math.Abs(y - gy)); // Chebyshev for 8-way
+        => Math.Max(Math.Abs(x - gx), Math.Abs(y - gy));
 
     static List<(int x, int y)> ReconstructPath(Node node)
     {
@@ -120,4 +112,28 @@ public class Pathfinder
 
     static bool IsInBounds(int x, int y, int width, int height)
         => x >= 0 && x < width && y >= 0 && y < height;
+
+    static bool IsAreaOpen(Tile[,] map, int cx, int cy, int radius, Unit ignoreUnit = null)
+    {
+        int width = map.GetLength(0);
+        int height = map.GetLength(1);
+        int r2 = radius * radius;
+        for (int dx = -radius + 1; dx < radius; dx++)
+        {
+            for (int dy = -radius + 1; dy < radius; dy++)
+            {
+                int tx = cx + dx;
+                int ty = cy + dy;
+                if (tx < 0 || tx >= width || ty < 0 || ty >= height)
+                    return false;
+                if (dx * dx + dy * dy >= r2)
+                    continue;
+                if (!map[tx, ty].IsWalkable)
+                    return false;
+                if (map[tx, ty].Unit != null && map[tx, ty].Unit != ignoreUnit)
+                    return false;
+            }
+        }
+        return true;
+    }
 }
