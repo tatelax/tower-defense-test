@@ -27,7 +27,7 @@ namespace Systems
           
           _mapSystem.AttackTarget(unit);
           
-          unit.CurrAttackTimer = unit.Stats.AttackSpeed;
+          unit.CurrAttackTimer = unit.Data.AttackSpeed;
         }
 
         unit.CurrAttackTimer -= Time.deltaTime;

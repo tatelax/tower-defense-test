@@ -5,8 +5,8 @@ namespace UI
 {
   public class CharacterButton : ButtonWithDragEvents
   {
-    [SerializeField] private CharacterScriptableObject _character;
+    [SerializeField] private UnitDataScriptableObject unitData;
     
-    public CharacterScriptableObject Character => _character;
+    public UnitDataScriptableObject UnitData => unitData;
   }
 }

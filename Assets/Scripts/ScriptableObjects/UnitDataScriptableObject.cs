@@ -1,13 +1,14 @@
+using Types;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.UI;
 
 namespace ScriptableObjects
 {
-  [CreateAssetMenu(fileName = "New Character", menuName = "Game/Character")]
-  public class CharacterScriptableObject: ScriptableObject
+  [CreateAssetMenu(fileName = "New Unit Data", menuName = "Game/Unit Data")]
+  public class UnitDataScriptableObject: ScriptableObject
   {
     [SerializeField] private string _name;
+    [SerializeField] private UnitType _unitType;
     [SerializeField] private AssetReference assetReference;
     [SerializeField] private Sprite _image;
     [SerializeField] private float _powerRequired;
@@ -26,5 +27,6 @@ namespace ScriptableObjects
     public float MoveSpeed => _moveSpeed;
     public int Radius => _radius;
     public float AttackSpeed => _attackSpeed;
+    public UnitType UnitType => _unitType;
   }
 }

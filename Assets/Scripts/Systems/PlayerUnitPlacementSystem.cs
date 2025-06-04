@@ -1,5 +1,6 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Helpers;
 using Orchestrator;
 using Types;
 using UI;
@@ -33,17 +34,8 @@ namespace Systems
       if (_currentUnitVisual is not null)
         return;
 
-      var button = _ui.CharacterButtons.First(b => b.Character.Name == id).Character;
-      var newGameObject = await Addressables.InstantiateAsync(button.AssetReference, GetDragPosInWorldSpace(), Quaternion.identity).ToUniTask();
-
-      if (newGameObject.TryGetComponent(out UnitVisual unitVisual))
-      {
-        _currentUnitVisual = unitVisual;
-      }
-      else
-      {
-        Debug.LogError("Can't find UnitVisual component");
-      }
+      var character = _ui.CharacterButtons.First(b => b.UnitData.Name == id).UnitData;
+      _currentUnitVisual = await SpawnUnitHelper.SpawnVisual(character, GetDragPosInWorldSpace());
     }
     
     private void OnDragEnd(string id)
@@ -51,14 +43,9 @@ namespace Systems
       if (_currentUnitVisual is null)
         return;
 
-      var characterData = _ui.CharacterButtons.First(b => b.Character.Name == id).Character;
-      var stats = new Stats(100, characterData.Defense, characterData.AttackSpeed, characterData.Strength, characterData.MoveSpeed);
+      var characterData = _ui.CharacterButtons.First(b => b.UnitData.Name == id).UnitData;
       
-      var newUnit = _mapSystem.CreateUnit(_currentUnitVisual, 
-        true, 
-        UnitType.Character, 
-        characterData.Radius,
-        stats);
+      var newUnit = _mapSystem.CreateUnit(_currentUnitVisual, true, characterData);
 
       if (newUnit == null)
       {

@@ -54,7 +54,7 @@ public static class FastPathfinder
         if (goalBlockedByOtherUnit)
         {
             // Get all tiles covered by the goal unit
-            var covered = mapSystem.GetTilesCovered(goalUnit.CurrTile, goalUnit.Radius);
+            var covered = mapSystem.GetTilesCovered(goalUnit.CurrTile, goalUnit.Data.Radius);
             var coveredSet = new HashSet<(int, int)>(covered);
 
             // Find all unique neighbor tiles around the covered tiles
@@ -67,7 +67,7 @@ public static class FastPathfinder
                     if (neighbor.x < 0 || neighbor.x >= width || neighbor.y < 0 || neighbor.y >= height)
                         continue;
                     // Must NOT be inside the covered area, must be open for our unit
-                    if (!coveredSet.Contains(neighbor) && mapSystem.IsTileOpen(neighbor, unit.Radius))
+                    if (!coveredSet.Contains(neighbor) && mapSystem.IsTileOpen(neighbor, unit.Data.Radius))
                     {
                         candidateTiles.Add(neighbor);
                     }
@@ -97,7 +97,7 @@ public static class FastPathfinder
         int nodeCount = 0;
 
         int goalX = newGoal.x, goalY = newGoal.y;
-        int unitRadius = unit.Radius;
+        int unitRadius = unit.Data.Radius;
 
         nodePool[0].Set(start.x, start.y, 0, Heuristic(start.x, start.y, goalX, goalY), -1);
         openHeap[openCount++] = 0;
@@ -192,11 +192,11 @@ public static class FastPathfinder
     /// </summary>
     private static bool IsWalkableWithGoalCheck(MapSystem mapSystem, (int x, int y) pos, Unit movingUnit, (int x, int y) goal)
     {
-        if (!mapSystem.IsTileOpen(pos, movingUnit.Radius))
+        if (!mapSystem.IsTileOpen(pos, movingUnit.Data.Radius))
             return false;
         if (pos == goal)
         {
-            var tiles = mapSystem.GetTilesCovered(pos, movingUnit.Radius);
+            var tiles = mapSystem.GetTilesCovered(pos, movingUnit.Data.Radius);
             foreach (var tile in tiles)
             {
                 var u = mapSystem.Map[tile.x, tile.y].Unit;

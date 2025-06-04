@@ -41,6 +41,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bfb6efd674f5f44b082344edb98f6d81
+    m_Address: Assets/Settings/Game/PlayerBase.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f049df4b820c24b4e9dda0e6bb388bc2
+    m_Address: Assets/Settings/Game/EnemyBase.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 47d7978b2c3ce4768a40cdff734d2d42, type: 2}
   m_SchemaSet:

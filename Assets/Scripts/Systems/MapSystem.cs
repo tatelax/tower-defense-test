@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Orchestrator;
+using ScriptableObjects;
 using Types;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -105,8 +106,8 @@ namespace Systems
 
         public void PlaceUnit(Unit unit, (int x, int y) pos)
         {
-            var newTiles = GetTilesCovered(pos, unit.Radius);
-            var oldTiles = GetTilesCovered(unit.CurrTile, unit.Radius);
+            var newTiles = GetTilesCovered(pos, unit.Data.Radius);
+            var oldTiles = GetTilesCovered(unit.CurrTile, unit.Data.Radius);
 
             foreach (var tile in oldTiles)
             {
@@ -118,7 +119,7 @@ namespace Systems
             {
                 if (!IsWalkable(tile) || (Map[tile.x, tile.y].Unit != null && Map[tile.x, tile.y].Unit != unit))
                 {
-                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} at {tile} (radius {unit.Radius})");
+                    Debug.LogError($"Failed to place unit {unit.GetHashCode()} at {tile} (radius {unit.Data.Radius})");
                     return;
                 }
             }
@@ -130,20 +131,20 @@ namespace Systems
             Debug.Log($"placed at {pos}. IsWalkable = {Map[pos.x, pos.y].IsWalkable}");
         }
 
-        public Unit CreateUnit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, int radius, Stats stats)
+        public Unit CreateUnit(UnitVisual visual, bool isPlayerOwned, UnitDataScriptableObject stats)
         {
             var pos = WorldToTileSpace(visual.transform.position);
 
-            if (!IsTileOpen(pos, radius))
+            if (!IsTileOpen(pos, stats.Radius))
             {
-                Debug.LogError($"Failed to create unit of type {unitType} at {pos} because tile was occupied");
+                Debug.LogError($"Failed to create unit of type {stats.UnitType} at {pos} because tile was occupied");
                 return null;
             }
 
-            var newUnit = new Unit(visual, isPlayerOwned, unitType, pos, radius, stats);
+            var newUnit = new Unit(visual, isPlayerOwned, pos, stats);
             Units.Add(newUnit);
 
-            visual.gameObject.name = $"{unitType} Unit ({newUnit.GetHashCode()})";
+            visual.gameObject.name = $"{stats.UnitType} Unit ({newUnit.GetHashCode()})";
             PlaceUnit(newUnit, newUnit.CurrTile);
 
             return newUnit;
@@ -157,11 +158,11 @@ namespace Systems
                 return;
             }
 
-            unit.Target.Damage(unit.Stats.Strength);
+            unit.Target.Damage(unit.Data.Strength);
 
-            if (unit.Target.Stats.CurrHealth <= 0)
+            if (unit.Target.CurrHealth <= 0)
             {
-                foreach (var tile in GetTilesCovered(unit.Target.CurrTile, unit.Target.Radius))
+                foreach (var tile in GetTilesCovered(unit.Target.CurrTile, unit.Target.Data.Radius))
                 {
                     if (Map[tile.x, tile.y].Unit == unit.Target)
                         Map[tile.x, tile.y].Unit = null;

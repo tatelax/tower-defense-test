@@ -1,15 +1,20 @@
 using Cysharp.Threading.Tasks;
+using Helpers;
 using Orchestrator;
-using Types;
+using ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using Visuals;
 
 namespace Systems
 {
     public class BaseSystem : ISystem
     {
-        private const string BaseAddress = "Assets/Prefabs/Base.prefab";
+        private const string PlayerBaseConfigAddress = "Assets/Settings/Game/PlayerBase.asset";
+        private const string EnemyBaseConfigAddress = "Assets/Settings/Game/EnemyBase.asset";
+
+        private UnitDataScriptableObject _playerBaseConfig;
+        private UnitDataScriptableObject _enemyBaseConfig;
+
         private const ushort MinimumBaseSpacing = 3;
         private const ushort NumBases = 2;
         private const int BaseRadius = 2;
@@ -19,6 +24,10 @@ namespace Systems
         public async UniTask Init()
         {
             _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
+
+            _playerBaseConfig = await Addressables.LoadAssetAsync<UnitDataScriptableObject>(PlayerBaseConfigAddress);
+            _enemyBaseConfig = await Addressables.LoadAssetAsync<UnitDataScriptableObject>(EnemyBaseConfigAddress);
+            
             await PlaceBases();
         }
 
@@ -68,17 +77,9 @@ namespace Systems
 
         private async UniTask CreateBase(Vector3 pos, bool isPlayerOwned)
         {
-            var newGameObject = await Addressables.InstantiateAsync(BaseAddress, pos, Quaternion.identity);
-
-            if (newGameObject.TryGetComponent(out UnitVisual visual))
-            {
-                var stats = new Stats(100, 1, 0, 0, 0);
-                _ = _mapSystem.CreateUnit(visual, isPlayerOwned, UnitType.Base, BaseRadius, stats);
-            }
-            else
-            {
-                Debug.LogError($"Can't create unit: {visual.gameObject.name}");
-            }
+            var option = isPlayerOwned ? _playerBaseConfig : _enemyBaseConfig;
+            var visual = await SpawnUnitHelper.SpawnVisual(option, pos);
+            _mapSystem.CreateUnit(visual, isPlayerOwned, option);
         }
     }
 }

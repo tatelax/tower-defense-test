@@ -25,7 +25,7 @@ namespace Systems
 
             foreach (Unit unit in _mapSystem.Units)
             {
-                if (unit.UnitType != UnitType.Character)
+                if (unit.Data.UnitType != UnitType.Character)
                     continue;
 
                 var closestTarget = FindClosestTarget(unit);
@@ -94,7 +94,7 @@ namespace Systems
 
                 var newPos = Vector3.MoveTowards(unit.Visual.transform.position, 
                     unit.CurrentSmoothedPath[unit.CurrentPathIndex + 1], 
-                    Time.deltaTime * unit.Stats.MoveSpeed);
+                    Time.deltaTime * unit.Data.MoveSpeed);
                 
                 var newRot = Quaternion.LookRotation(unit.CurrentSmoothedPath[unit.CurrentPathIndex + 1] - unit.Visual.transform.position);
                 var newRotSmoothed = Quaternion.Slerp(unit.Visual.transform.rotation, newRot, Time.deltaTime * RotateSpeed);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ScriptableObjects;
 using Systems;
 using UnityEngine;
 using Visuals;
@@ -18,20 +19,18 @@ namespace Types
     public UnitState State { get; private set; }
     public UnitVisual Visual { get; }
     public bool IsPlayerOwned { get; }
-    public UnitType UnitType { get; }
-    public int Radius { get; }
-    public Stats Stats { get; }
+    public float CurrHealth { get; private set; }
+    public UnitDataScriptableObject Data { get; }
 
-    public Unit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos, int radius, Stats stats)
+    public Unit(UnitVisual visual, bool isPlayerOwned, (int x, int y) pos, UnitDataScriptableObject data)
     {
       Visual = visual;
       IsPlayerOwned = isPlayerOwned;
-      UnitType = unitType;
       CurrTile = pos;
-      Radius = radius;
 
-      Stats = stats;
+      Data = data;
       State = UnitState.Idle;
+      CurrHealth = 100f;
 
       CurrentPathBuffer = new (int x, int y)[MapSystem.SizeX * MapSystem.SizeY];
     }
@@ -49,7 +48,7 @@ namespace Types
 
     public void Damage(float amount)
     {
-      Stats.CurrHealth -= amount / Stats.Defense;
+      CurrHealth -= amount / Data.Defense;
     }
   }
 }

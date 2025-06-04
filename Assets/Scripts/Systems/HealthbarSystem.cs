@@ -19,7 +19,7 @@ namespace Systems
         if (unit.Visual?.HealthBar is null)
           continue;
         
-        unit.Visual.HealthBar.value = unit.Stats.CurrHealth / 100;
+        unit.Visual.HealthBar.value = unit.CurrHealth / 100;
       }
     }
   }

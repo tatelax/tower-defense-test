@@ -28,7 +28,7 @@ namespace Systems
       foreach (var button in _ui.CharacterButtons)
       {
         var barValue = _ui.PowerBar.value * 100f;
-        button.interactable = !(barValue < button.Character.PowerRequired);
+        button.interactable = !(barValue < button.UnitData.PowerRequired);
       }
     }
 

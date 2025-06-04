@@ -1,29 +1,21 @@
-#if UNITY_EDITOR
-using UI;
 using UnityEditor;
+using UnityEngine;
+using UI;
 
-namespace Editor
+[CustomEditor(typeof(CharacterButton))]
+public class CharacterButtonEditor : Editor
 {
-  [CustomEditor(typeof(CharacterButton))]
-  public class CharacterButtonEditor : UnityEditor.UI.ButtonEditor
+  public override void OnInspectorGUI()
   {
-    private SerializedProperty _characterProp;
+    // Exclude "unitData" from default drawing so we can draw it manually
+    DrawPropertiesExcluding(serializedObject, "unitData");
 
-    protected override void OnEnable()
-    {
-      base.OnEnable();
-      _characterProp = serializedObject.FindProperty("_character");
-    }
+    EditorGUILayout.Space();
+    EditorGUILayout.LabelField("Character Button Settings", EditorStyles.boldLabel);
 
-    public override void OnInspectorGUI()
-    {
-      serializedObject.Update();
-      EditorGUILayout.PropertyField(_characterProp);
-      serializedObject.ApplyModifiedProperties();
-      EditorGUILayout.Space();
-      
-      base.OnInspectorGUI();
-    }
+    SerializedProperty unitDataProp = serializedObject.FindProperty("unitData");
+    EditorGUILayout.PropertyField(unitDataProp, new GUIContent("Unit Data"));
+
+    serializedObject.ApplyModifiedProperties();
   }
 }
-#endif

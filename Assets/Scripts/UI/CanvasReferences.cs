@@ -21,9 +21,9 @@ namespace UI
       {
         var button = characterButtons[i];
         
-        button.OnBeginDragAction += () => OnBeginDragAction(button.Character.Name);
-        button.OnEndDragAction += () => OnEndDragAction(button.Character.Name);
-        button.image.sprite = button.Character.Image;
+        button.OnBeginDragAction += () => OnBeginDragAction(button.UnitData.Name);
+        button.OnEndDragAction += () => OnEndDragAction(button.UnitData.Name);
+        button.image.sprite = button.UnitData.Image;
       }
     }
 
