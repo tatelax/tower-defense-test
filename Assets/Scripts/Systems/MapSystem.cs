@@ -9,8 +9,8 @@ namespace Systems
 {
     public class MapSystem : ISystem
     {
-        public const int SizeX = 21;
-        public const int SizeY = 37;
+        public const int SizeX = 17;
+        public const int SizeY = 31;
 
         public HashSet<Unit> Units { get; private set; }
         public Tile[,] Map { get; } = new Tile[SizeX, SizeY];
@@ -25,6 +25,8 @@ namespace Systems
 
         public async UniTask Init()
         {
+            Debug.Assert(SizeX % 2 != 0 && SizeY % 2 != 0, "SizeX % 2 != 0 && SizeY % 2 != 0");
+            
             Units = new ();
             await GenerateMap();
         }
@@ -127,7 +129,7 @@ namespace Systems
             Debug.Log($"placed at {pos}. IsWalkable = {Map[pos.x, pos.y].IsWalkable}");
         }
 
-        public Unit CreateUnit(GameObject visual, bool isPlayerOwned, UnitType unitType, int radius = 1)
+        public Unit CreateUnit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, int radius = 1)
         {
             var pos = WorldToTileSpace(visual.transform.position);
 
@@ -164,7 +166,8 @@ namespace Systems
                         Map[tile.x, tile.y].Unit = null;
                 }
 
-                GameObject.Destroy(unit.Target.Visual);
+                // TODO: Pooling
+                Addressables.Release(unit.Target.Visual.gameObject);
 
                 Run().Forget();
                 async UniTask Run()

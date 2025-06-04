@@ -15,13 +15,13 @@ namespace Types
     public int CurrentPathIndex;
     
     public UnitState State { get; private set; }
-    public GameObject Visual { get; }
+    public UnitVisual Visual { get; }
     public bool IsPlayerOwned { get; }
     public UnitType UnitType { get; }
     public int Radius { get; }
     public Stats Stats { get; }
 
-    public Unit(GameObject visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos, int radius = 1, float defense = 1, float attackSpeed = 1, float strength = 25)
+    public Unit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos, int radius = 1, float defense = 1, float attackSpeed = 1, float strength = 25)
     {
       Visual = visual;
       IsPlayerOwned = isPlayerOwned;

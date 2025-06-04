@@ -15,12 +15,9 @@ namespace Systems
       ""
     };
 
-    private const float DragSpeed = 15.0f;
-
     private MapSystem _mapSystem;
     
-    private GameObject _currentUnitVisual;
-    private Vector3 _targetPosInWorldSpace;
+    private UnitVisual _currentUnitVisual;
     
     public async UniTask Init()
     {
@@ -36,7 +33,16 @@ namespace Systems
       if (_currentUnitVisual is not null)
         return;
       
-      _currentUnitVisual = await Addressables.InstantiateAsync(_unitAddresses[id], GetDragPosInWorldSpace(), Quaternion.identity).ToUniTask();
+      var newGameObject = await Addressables.InstantiateAsync(_unitAddresses[id], GetDragPosInWorldSpace(), Quaternion.identity).ToUniTask();
+
+      if (newGameObject.TryGetComponent(out UnitVisual unitVisual))
+      {
+        _currentUnitVisual = unitVisual;
+      }
+      else
+      {
+        Debug.LogError("Can't find UnitVisual component");
+      }
     }
     
     private void OnDragEnd(ushort id)
@@ -48,7 +54,7 @@ namespace Systems
 
       if (newUnit == null)
       {
-        Addressables.Release(_currentUnitVisual);
+        Addressables.Release(_currentUnitVisual.gameObject);
       }
 
       _currentUnitVisual = null;
@@ -59,13 +65,9 @@ namespace Systems
       if (_currentUnitVisual is null)
         return;
 
-      Vector3 dragPos = GetDragPosInWorldSpace();
-      _targetPosInWorldSpace = new Vector3(Mathf.RoundToInt(dragPos.x), 1, Mathf.RoundToInt(dragPos.y));
-      
-      //_currentUnitVisual.transform.position = Vector3.Lerp(_currentUnitVisual.transform.position, _targetPosInWorldSpace, DragSpeed * Time.deltaTime);
-      _currentUnitVisual.transform.position = dragPos;
+      _currentUnitVisual.transform.position = GetDragPosInWorldSpace();
     }
-    
+
     private Vector3 GetDragPosInWorldSpace()
     {
       Camera cam = Camera.main;

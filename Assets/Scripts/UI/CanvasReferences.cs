@@ -1,10 +1,15 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
   public class CanvasReferences : MonoBehaviour
   {
+    [SerializeField] private Slider powerBar;
+    
+    public Slider PowerBar => powerBar;
+    
     public Action<ushort> OnDragBegin;
     public Action<ushort> OnDragEnd;
 

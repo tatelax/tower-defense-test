@@ -34,8 +34,7 @@ namespace Systems
                     if (!_mapSystem.IsTileOpen((x, y), BaseRadius)) continue;
 
                     var spawnPos = MapSystem.TileToWorldSpace((x, y));
-                    var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
-                    _ = _mapSystem.CreateUnit(visual, true, UnitType.Base, BaseRadius);
+                    await CreateBase(spawnPos, true);
 
                     playerBases++;
 
@@ -54,8 +53,7 @@ namespace Systems
                     if (!_mapSystem.IsTileOpen((x, y), BaseRadius)) continue;
 
                     var spawnPos = MapSystem.TileToWorldSpace((x, y));
-                    var visual = await Addressables.InstantiateAsync(BaseAddress, spawnPos, Quaternion.identity);
-                    _ = _mapSystem.CreateUnit(visual, false, UnitType.Base, BaseRadius);
+                    await CreateBase(spawnPos, false);
 
                     enemyBases++;
 
@@ -64,6 +62,20 @@ namespace Systems
                         x -= MinimumBaseSpacing;
                     }
                 }
+            }
+        }
+
+        private async UniTask CreateBase(Vector3 pos, bool isPlayerOwned)
+        {
+            var newGameObject = await Addressables.InstantiateAsync(BaseAddress, pos, Quaternion.identity);
+
+            if (newGameObject.TryGetComponent(out UnitVisual visual))
+            {
+                _ = _mapSystem.CreateUnit(visual, isPlayerOwned, UnitType.Base, BaseRadius);
+            }
+            else
+            {
+                Debug.LogError($"Can't create unit: {visual.gameObject.name}");
             }
         }
     }
