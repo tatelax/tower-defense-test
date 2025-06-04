@@ -1,16 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class UnitVisual : MonoBehaviour
+namespace Visuals
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class UnitVisual : MonoBehaviour
     {
+        [SerializeField] private Slider _healthBar;
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public Slider HealthBar => _healthBar;
     }
 }

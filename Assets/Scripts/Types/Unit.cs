@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Systems;
 using UnityEngine;
+using Visuals;
 
 namespace Types
 {

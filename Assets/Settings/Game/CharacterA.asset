@@ -19,7 +19,7 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
-  _sprite: {fileID: 0}
+  _image: {fileID: 21300000, guid: 1373f3559e06f4ede8cf747883f8b387, type: 3}
   _powerRequired: 20
   _radius: 1
   _defense: 1
