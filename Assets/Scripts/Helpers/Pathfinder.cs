@@ -34,12 +34,13 @@ public static class FastPathfinder
         Tile[,] map,
         (int x, int y) start,
         (int x, int y) goal,
-        (int x, int y)[] outPath)
+        (int x, int y)[] outPath,
+        bool excludeLastTile = false
+    )
     {
         int width = MapSystem.SizeX;
         int height = MapSystem.SizeY;
 
-        // Lazy init
         if (closed == null || closed.GetLength(0) != width || closed.GetLength(1) != height)
         {
             closed = new bool[width, height];
@@ -78,6 +79,11 @@ public static class FastPathfinder
                     outPath[i] = outPath[len - i - 1];
                     outPath[len - i - 1] = tmp;
                 }
+                // Exclude last tile (goal) if requested
+                if (excludeLastTile && len > 1)
+                {
+                    len -= 1;
+                }
                 return len;
             }
 
@@ -101,7 +107,6 @@ public static class FastPathfinder
                         continue;
                 }
 
-                // Regular walkable/unit checks
                 if (!IsWalkable(map, nx, ny, unit))
                     continue;
 
@@ -131,7 +136,6 @@ public static class FastPathfinder
             }
         }
 
-        // No path
         UnityEngine.Debug.LogWarning($"[Pathfinder] No path found from {start} to {goal}.");
         return 0;
     }
