@@ -10,7 +10,7 @@ namespace Types
     public float CurrAttackTimer;
     public Unit Target;
     
-    public (int x, int y)[] CurrentPathBuffer;
+    public readonly (int x, int y)[] CurrentPathBuffer;
     public List<Vector3> CurrentSmoothedPath;
     public int CurrentPathIndex;
     

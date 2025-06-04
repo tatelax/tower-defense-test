@@ -11,7 +11,7 @@ namespace Systems
         private const string BaseAddress = "Assets/Prefabs/Base.prefab";
         private const ushort MinimumBaseSpacing = 3;
         private const ushort NumBases = 2;
-        private const int BaseRadius = 1;
+        private const int BaseRadius = 2;
 
         private MapSystem _mapSystem;
 

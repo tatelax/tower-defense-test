@@ -80,7 +80,7 @@ namespace Systems
             Addressables.Release(detailSprite);
         }
 
-        private List<(int x, int y)> GetTilesCovered((int x, int y) center, int radius)
+        public List<(int x, int y)> GetTilesCovered((int x, int y) center, int radius)
         {
             var tiles = new List<(int x, int y)>();
             int r2 = radius * radius;

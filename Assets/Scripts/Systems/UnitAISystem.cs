@@ -55,7 +55,7 @@ namespace Systems
                         _mapSystem.PlaceUnit(unit, tileVisualIsIn);
                     }
 
-                    int pathLen = FastPathfinder.FindPath(unit.Target, _mapSystem.Map, unit.CurrTile, unit.Target.CurrTile, unit.CurrentPathBuffer, true);
+                    int pathLen = FastPathfinder.FindPath(_mapSystem, unit, unit.CurrTile, unit.Target.CurrTile, unit.CurrentPathBuffer, true);
                     
                     if (pathLen < 2)
                         continue;
