@@ -1,139 +1,169 @@
 using System;
-using System.Collections.Generic;
 using Types;
-using UnityEngine;
+using Systems;
 
-public class Node
+public static class FastPathfinder
 {
-    public int X, Y, Cost, Priority;
-    public Node Parent;
+    private const int MaxNodes = 4096;
 
-    public Node(int x, int y, int cost, int priority, Node parent = null)
+    struct Node
     {
-        X = x; Y = y; Cost = cost; Priority = priority; Parent = parent;
+        public int x, y, g, h, f, parentIndex;
+        public void Set(int x, int y, int g, int h, int parentIndex)
+        {
+            this.x = x; this.y = y; this.g = g; this.h = h;
+            this.f = g + h;
+            this.parentIndex = parentIndex;
+        }
     }
-}
 
-public class Pathfinder
-{
-    static int[,] directions = new int[,]
+    private static Node[] nodePool = new Node[MaxNodes];
+    private static int[] openHeap = new int[MaxNodes];
+    private static int openCount;
+    private static bool[,] closed;
+    private static int[,] cameFrom;
+
+    // 8-way
+    private static readonly (int dx, int dy)[] Directions = new (int, int)[]
     {
-        { 0, 1 },  { 1, 1 },  { 1, 0 },  { 1, -1 },
-        { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 }
+        (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1), (-1,0), (-1,1)
     };
 
-    public static List<(int x, int y)> FindPath(Unit unit, Tile[,] map, (int x, int y) start, (int x, int y) goal)
+    public static int FindPath(
+        Unit unit,
+        Tile[,] map,
+        (int x, int y) start,
+        (int x, int y) goal,
+        (int x, int y)[] outPath)
     {
-        int width = map.GetLength(0);
-        int height = map.GetLength(1);
+        int width = MapSystem.SizeX;
+        int height = MapSystem.SizeY;
 
-        var open = new SortedSet<(int priority, int count, Node node)>();
-        int counter = 0;
-        var closed = new HashSet<(int, int)>();
-
-        var startNode = new Node(start.x, start.y, 0, Heuristic(start.x, start.y, goal.x, goal.y));
-        open.Add((startNode.Priority, counter++, startNode));
-
-        Node furthestNode = null;
-        int bestHeuristic = int.MaxValue;
-
-        while (open.Count > 0)
+        // Lazy init
+        if (closed == null || closed.GetLength(0) != width || closed.GetLength(1) != height)
         {
-            var current = open.Min.node;
-            open.Remove(open.Min);
+            closed = new bool[width, height];
+            cameFrom = new int[width, height];
+        }
+        Array.Clear(closed, 0, closed.Length);
 
-            if ((current.X, current.Y) == goal)
+        openCount = 0;
+        int nodeCount = 0;
+
+        int goalX = goal.x, goalY = goal.y;
+
+        nodePool[0].Set(start.x, start.y, 0, Heuristic(start.x, start.y, goalX, goalY), -1);
+        openHeap[openCount++] = 0;
+        cameFrom[start.x, start.y] = -1;
+        nodeCount = 1;
+
+        while (openCount > 0)
+        {
+            int currentIndex = PopMinHeap();
+            Node current = nodePool[currentIndex];
+
+            if (current.x == goalX && current.y == goalY)
             {
-                if (IsAreaOpen(map, goal.x, goal.y, unit.Radius)) // Goal is open
+                int len = 0;
+                int n = currentIndex;
+                while (n >= 0 && len < outPath.Length)
                 {
-                    return ReconstructPath(current);
+                    outPath[len++] = (nodePool[n].x, nodePool[n].y);
+                    n = nodePool[n].parentIndex;
                 }
-            }
-
-            closed.Add((current.X, current.Y));
-
-            int h = Heuristic(current.X, current.Y, goal.x, goal.y);
-            if (h < bestHeuristic)
-            {
-                bestHeuristic = h;
-                furthestNode = current;
-            }
-
-            for (int i = 0; i < 8; i++)
-            {
-                int nx = current.X + directions[i, 0];
-                int ny = current.Y + directions[i, 1];
-
-                if (nx < 0 || nx >= width || ny < 0 || ny >= height)
-                    continue;
-
-                bool isSelf = (nx == start.x && ny == start.y);
-                if (!IsAreaOpen(map, nx, ny, unit.Radius, isSelf ? unit : null))
-                    continue;
-
-                if (closed.Contains((nx, ny)))
-                    continue;
-
-                // Prevent diagonal corner cutting
-                if (i % 2 == 1)
+                // Reverse
+                for (int i = 0; i < len / 2; i++)
                 {
-                    int sx = current.X + directions[i, 0];
-                    int sy = current.Y;
-                    int ex = current.X;
-                    int ey = current.Y + directions[i, 1];
-                    if (!IsInBounds(sx, sy, width, height) || !IsInBounds(ex, ey, width, height)) continue;
-                    if (!IsAreaOpen(map, sx, sy, unit.Radius, isSelf ? unit : null) || !IsAreaOpen(map, ex, ey, unit.Radius, isSelf ? unit : null))
+                    var tmp = outPath[i];
+                    outPath[i] = outPath[len - i - 1];
+                    outPath[len - i - 1] = tmp;
+                }
+                return len;
+            }
+
+            closed[current.x, current.y] = true;
+
+            for (int d = 0; d < Directions.Length; d++)
+            {
+                int dx = Directions[d].dx, dy = Directions[d].dy;
+                int nx = current.x + dx, ny = current.y + dy;
+                if (nx < 0 || ny < 0 || nx >= width || ny >= height)
+                    continue;
+                if (closed[nx, ny])
+                    continue;
+
+                // Diagonal movement: check for corner cutting
+                if (dx != 0 && dy != 0)
+                {
+                    int x1 = current.x + dx, y1 = current.y;
+                    int x2 = current.x, y2 = current.y + dy;
+                    if (!(IsWalkable(map, x1, y1, unit) && IsWalkable(map, x2, y2, unit)))
                         continue;
                 }
 
-                int cost = current.Cost + 1;
-                var neighbor = new Node(nx, ny, cost, cost + Heuristic(nx, ny, goal.x, goal.y), current);
-                open.Add((neighbor.Priority, counter++, neighbor));
-            }
-        }
-
-        return furthestNode != null ? ReconstructPath(furthestNode) : null;
-    }
-
-    static int Heuristic(int x, int y, int gx, int gy)
-        => Math.Max(Math.Abs(x - gx), Math.Abs(y - gy));
-
-    static List<(int x, int y)> ReconstructPath(Node node)
-    {
-        var path = new List<(int, int)>();
-        while (node != null)
-        {
-            path.Add((node.X, node.Y));
-            node = node.Parent;
-        }
-        path.Reverse();
-        return path;
-    }
-
-    static bool IsInBounds(int x, int y, int width, int height)
-        => x >= 0 && x < width && y >= 0 && y < height;
-
-    static bool IsAreaOpen(Tile[,] map, int cx, int cy, int radius, Unit ignoreUnit = null)
-    {
-        int width = map.GetLength(0);
-        int height = map.GetLength(1);
-        int r2 = radius * radius;
-        for (int dx = -radius + 1; dx < radius; dx++)
-        {
-            for (int dy = -radius + 1; dy < radius; dy++)
-            {
-                int tx = cx + dx;
-                int ty = cy + dy;
-                if (tx < 0 || tx >= width || ty < 0 || ty >= height)
-                    return false;
-                if (dx * dx + dy * dy >= r2)
+                // Regular walkable/unit checks
+                if (!IsWalkable(map, nx, ny, unit))
                     continue;
-                if (!map[tx, ty].IsWalkable)
-                    return false;
-                if (map[tx, ty].Unit != null && map[tx, ty].Unit != ignoreUnit)
-                    return false;
+
+                int g = current.g + ((dx == 0 || dy == 0) ? 10 : 14);
+                int h = Heuristic(nx, ny, goalX, goalY);
+                int f = g + h;
+
+                // Already in open with lower f?
+                bool skip = false;
+                for (int i = 0; i < openCount; i++)
+                {
+                    int idx = openHeap[i];
+                    if (nodePool[idx].x == nx && nodePool[idx].y == ny && nodePool[idx].f <= f)
+                    {
+                        skip = true;
+                        break;
+                    }
+                }
+                if (skip) continue;
+
+                if (nodeCount >= MaxNodes)
+                    break;
+
+                nodePool[nodeCount].Set(nx, ny, g, h, currentIndex);
+                openHeap[openCount++] = nodeCount;
+                nodeCount++;
             }
         }
-        return true;
+
+        // No path
+        UnityEngine.Debug.LogWarning($"[Pathfinder] No path found from {start} to {goal}.");
+        return 0;
+    }
+
+    private static bool IsWalkable(Tile[,] map, int x, int y, Unit self)
+    {
+        var t = map[x, y];
+        return t.IsWalkable && (t.Unit == null || t.Unit == self);
+    }
+
+    private static int Heuristic(int x1, int y1, int x2, int y2)
+    {
+        int dx = Math.Abs(x1 - x2), dy = Math.Abs(y1 - y2);
+        return 10 * Math.Max(dx, dy);
+    }
+
+    private static int PopMinHeap()
+    {
+        int best = 0;
+        int bestF = nodePool[openHeap[0]].f;
+        for (int i = 1; i < openCount; i++)
+        {
+            int f = nodePool[openHeap[i]].f;
+            if (f < bestF)
+            {
+                best = i;
+                bestF = f;
+            }
+        }
+        int result = openHeap[best];
+        openCount--;
+        openHeap[best] = openHeap[openCount];
+        return result;
     }
 }

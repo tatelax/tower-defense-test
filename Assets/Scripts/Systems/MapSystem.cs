@@ -9,20 +9,19 @@ namespace Systems
 {
     public class MapSystem : ISystem
     {
-        public const int SizeX = 11;
-        public const int SizeY = 11;
+        public const int SizeX = 21;
+        public const int SizeY = 37;
 
         public HashSet<Unit> Units { get; private set; }
-        public Tile[,] Map => _map;
-        
+        public Tile[,] Map { get; } = new Tile[SizeX, SizeY];
+
         private const string GroundSpriteAddress = "GroundTiles";
         private const string DetailSpriteAddress = "Assets/Art/kenney_tiny-town/Tiles/tile_0106.png";
         private const float BlockedChance = 0.11f;
 
-        private readonly Tile[,] _map = new Tile[SizeX, SizeY];
         private readonly GameObject[,] _tileGos = new GameObject[SizeX, SizeY];
 
-        private System.Random rng = new();
+        private readonly System.Random rng = new();
 
         public async UniTask Init()
         {
@@ -73,7 +72,7 @@ namespace Systems
                         }
                     }
                 
-                    _map[x, y] = new Tile(x, y, isWalkable, go);
+                    Map[x, y] = new Tile(x, y, isWalkable, go);
                 }
             }
         
@@ -108,13 +107,13 @@ namespace Systems
 
             foreach (var tile in oldTiles)
             {
-                if (_map[tile.x, tile.y].Unit == unit)
-                    _map[tile.x, tile.y].Unit = null;
+                if (Map[tile.x, tile.y].Unit == unit)
+                    Map[tile.x, tile.y].Unit = null;
             }
 
             foreach (var tile in newTiles)
             {
-                if (!IsWalkable(tile) || (_map[tile.x, tile.y].Unit != null && _map[tile.x, tile.y].Unit != unit))
+                if (!IsWalkable(tile) || (Map[tile.x, tile.y].Unit != null && Map[tile.x, tile.y].Unit != unit))
                 {
                     Debug.LogError($"Failed to place unit {unit.GetHashCode()} at {tile} (radius {unit.Radius})");
                     return;
@@ -122,10 +121,10 @@ namespace Systems
             }
 
             foreach (var tile in newTiles)
-                _map[tile.x, tile.y].Unit = unit;
+                Map[tile.x, tile.y].Unit = unit;
 
             unit.CurrTile = pos;
-            Debug.Log($"placed at {pos}. IsWalkable = {_map[pos.x, pos.y].IsWalkable}");
+            Debug.Log($"placed at {pos}. IsWalkable = {Map[pos.x, pos.y].IsWalkable}");
         }
 
         public Unit CreateUnit(GameObject visual, bool isPlayerOwned, UnitType unitType, int radius = 1)
@@ -161,8 +160,8 @@ namespace Systems
             {
                 foreach (var tile in GetTilesCovered(unit.Target.CurrTile, unit.Target.Radius))
                 {
-                    if (_map[tile.x, tile.y].Unit == unit.Target)
-                        _map[tile.x, tile.y].Unit = null;
+                    if (Map[tile.x, tile.y].Unit == unit.Target)
+                        Map[tile.x, tile.y].Unit = null;
                 }
 
                 GameObject.Destroy(unit.Target.Visual);
@@ -183,7 +182,7 @@ namespace Systems
             {
                 if (tile.x < 0 || tile.x >= SizeX || tile.y < 0 || tile.y >= SizeY)
                     return false;
-                if (!IsWalkable(tile) || _map[tile.x, tile.y].Unit != null)
+                if (!IsWalkable(tile) || Map[tile.x, tile.y].Unit != null)
                     return false;
             }
             return true;
@@ -217,6 +216,6 @@ namespace Systems
             return Mathf.RoundToInt(Mathf.Sqrt(dx * dx + dy * dy));
         }
 
-        public bool IsWalkable((int x, int y) pos) => _map[pos.x, pos.y].IsWalkable;
+        public bool IsWalkable((int x, int y) pos) => Map[pos.x, pos.y].IsWalkable;
     }
 }
