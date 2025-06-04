@@ -71,7 +71,8 @@ namespace Systems
 
             if (newGameObject.TryGetComponent(out UnitVisual visual))
             {
-                _ = _mapSystem.CreateUnit(visual, isPlayerOwned, UnitType.Base, BaseRadius);
+                var stats = new Stats(100, 1, 0, 0, 0);
+                _ = _mapSystem.CreateUnit(visual, isPlayerOwned, UnitType.Base, BaseRadius, stats);
             }
             else
             {

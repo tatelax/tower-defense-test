@@ -17,7 +17,20 @@ namespace Systems
       _ui = uiSystem.CanvasReferences;
     }
 
-    public void Update() => FillPowerbarContinuous();
+    public void Update()
+    {
+      FillPowerbarContinuous();
+      UpdateCharacterButtonEnabled();
+    }
+
+    private void UpdateCharacterButtonEnabled()
+    {
+      foreach (var button in _ui.CharacterButtons)
+      {
+        var barValue = _ui.PowerBar.value * 100f;
+        button.interactable = !(barValue < button.Character.PowerRequired);
+      }
+    }
 
     private void FillPowerbarContinuous() => _ui.PowerBar.value += Mathf.Min(FillRate * Time.deltaTime, 1f);
 

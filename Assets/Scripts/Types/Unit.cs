@@ -21,7 +21,7 @@ namespace Types
     public int Radius { get; }
     public Stats Stats { get; }
 
-    public Unit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos, int radius = 1, float defense = 1, float attackSpeed = 1, float strength = 25)
+    public Unit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, (int x, int y) pos, int radius, Stats stats)
     {
       Visual = visual;
       IsPlayerOwned = isPlayerOwned;
@@ -29,7 +29,7 @@ namespace Types
       CurrTile = pos;
       Radius = radius;
 
-      Stats = new Stats(100, defense, attackSpeed, strength);
+      Stats = stats;
       State = UnitState.Idle;
 
       CurrentPathBuffer = new (int x, int y)[MapSystem.SizeX * MapSystem.SizeY];

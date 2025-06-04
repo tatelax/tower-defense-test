@@ -1,6 +1,8 @@
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Orchestrator;
 using Types;
+using UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -8,14 +10,9 @@ namespace Systems
 {
   public class PlayerUnitPlacementSystem : ISystem
   {
-    private readonly string[] _unitAddresses = {
-      "Assets/Prefabs/Units/Unit.prefab",
-      "",
-      "",
-      ""
-    };
-
     private MapSystem _mapSystem;
+    private PowerbarSystem _powerbarSystem;
+    private CanvasReferences _ui;
     
     private UnitVisual _currentUnitVisual;
     
@@ -23,17 +20,20 @@ namespace Systems
     {
       var uiSystem = await Orchestrator.Orchestrator.GetSystemAsync<UISystem>();
       _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
+      _powerbarSystem = await Orchestrator.Orchestrator.GetSystemAsync<PowerbarSystem>();
       
-      uiSystem.CanvasReferences.OnDragBegin += id => _ = OnDragBegin(id);
-      uiSystem.CanvasReferences.OnDragEnd += OnDragEnd;
+      _ui = uiSystem.CanvasReferences;
+      _ui.OnDragBegin += id => _ = OnDragBegin(id);
+      _ui.OnDragEnd += OnDragEnd;
     }
 
-    private async UniTask OnDragBegin(ushort id)
+    private async UniTask OnDragBegin(string id)
     {
       if (_currentUnitVisual is not null)
         return;
-      
-      var newGameObject = await Addressables.InstantiateAsync(_unitAddresses[id], GetDragPosInWorldSpace(), Quaternion.identity).ToUniTask();
+
+      var button = _ui.CharacterButtons.First(b => b.Character.Name == id).Character;
+      var newGameObject = await Addressables.InstantiateAsync(button.AssetReference, GetDragPosInWorldSpace(), Quaternion.identity).ToUniTask();
 
       if (newGameObject.TryGetComponent(out UnitVisual unitVisual))
       {
@@ -45,16 +45,27 @@ namespace Systems
       }
     }
     
-    private void OnDragEnd(ushort id)
+    private void OnDragEnd(string id)
     {
       if (_currentUnitVisual is null)
         return;
 
-      var newUnit = _mapSystem.CreateUnit(_currentUnitVisual, true, UnitType.Character);
+      var characterData = _ui.CharacterButtons.First(b => b.Character.Name == id).Character;
+      var stats = new Stats(100, characterData.Defense, characterData.AttackSpeed, characterData.Strength, characterData.MoveSpeed);
+      
+      var newUnit = _mapSystem.CreateUnit(_currentUnitVisual, 
+        true, 
+        UnitType.Character, 
+        characterData.Radius,
+        stats);
 
       if (newUnit == null)
       {
         Addressables.Release(_currentUnitVisual.gameObject);
+      }
+      else
+      {
+        _powerbarSystem.UsePower(characterData.PowerRequired);
       }
 
       _currentUnitVisual = null;

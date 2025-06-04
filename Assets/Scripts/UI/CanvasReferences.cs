@@ -7,28 +7,27 @@ namespace UI
   public class CanvasReferences : MonoBehaviour
   {
     [SerializeField] private Slider powerBar;
-    
-    public Slider PowerBar => powerBar;
-    
-    public Action<ushort> OnDragBegin;
-    public Action<ushort> OnDragEnd;
+    [SerializeField] private CharacterButton[] characterButtons;
 
-    private ButtonWithDragEvents[] _buttons;
+    public Slider PowerBar => powerBar;
+    public CharacterButton[] CharacterButtons => characterButtons;
+    
+    public Action<string> OnDragBegin;
+    public Action<string> OnDragEnd;
 
     private void Awake()
     {
-      // Slow but only a few gameobjects so its fine
-      _buttons = gameObject.GetComponentsInChildren<ButtonWithDragEvents>();
-      
-      for (ushort i = 0; i < _buttons.Length; i++)
+      for (ushort i = 0; i < characterButtons.Length; i++)
       {
-        var i1 = i;
-        _buttons[i].OnBeginDragAction += () => OnBeginDragAction(i1);
-        _buttons[i].OnEndDragAction += () => OnEndDragAction(i1);
+        var button = characterButtons[i];
+        
+        button.OnBeginDragAction += () => OnBeginDragAction(button.Character.Name);
+        button.OnEndDragAction += () => OnEndDragAction(button.Character.Name);
+        button.image.sprite = button.Character.Image;
       }
     }
 
-    private void OnBeginDragAction(ushort id) => OnDragBegin?.Invoke(id);
-    private void OnEndDragAction(ushort id) => OnDragEnd?.Invoke(id);
+    private void OnBeginDragAction(string id) => OnDragBegin?.Invoke(id);
+    private void OnEndDragAction(string id) => OnDragEnd?.Invoke(id);
   }
 }

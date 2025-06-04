@@ -9,7 +9,6 @@ namespace Systems
 {
     public class UnitAISystem : ISystem
     {
-        private const float MoveSpeed = 5.0f;
         private const float RotateSpeed = 10.0f;
         
         private MapSystem _mapSystem;
@@ -95,7 +94,7 @@ namespace Systems
 
                 var newPos = Vector3.MoveTowards(unit.Visual.transform.position, 
                     unit.CurrentSmoothedPath[unit.CurrentPathIndex + 1], 
-                    Time.deltaTime * MoveSpeed);
+                    Time.deltaTime * unit.Stats.MoveSpeed);
                 
                 var newRot = Quaternion.LookRotation(unit.CurrentSmoothedPath[unit.CurrentPathIndex + 1] - unit.Visual.transform.position);
                 var newRotSmoothed = Quaternion.Slerp(unit.Visual.transform.rotation, newRot, Time.deltaTime * RotateSpeed);

@@ -21,7 +21,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4012dba137c8a4f62bc6b26f089413a7
-    m_Address: Assets/Prefabs/Units/Unit.prefab
+    m_Address: Assets/Prefabs/Characters/CharacterA.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

@@ -129,7 +129,7 @@ namespace Systems
             Debug.Log($"placed at {pos}. IsWalkable = {Map[pos.x, pos.y].IsWalkable}");
         }
 
-        public Unit CreateUnit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, int radius = 1)
+        public Unit CreateUnit(UnitVisual visual, bool isPlayerOwned, UnitType unitType, int radius, Stats stats)
         {
             var pos = WorldToTileSpace(visual.transform.position);
 
@@ -139,7 +139,7 @@ namespace Systems
                 return null;
             }
 
-            var newUnit = new Unit(visual, isPlayerOwned, unitType, pos, radius);
+            var newUnit = new Unit(visual, isPlayerOwned, unitType, pos, radius, stats);
             Units.Add(newUnit);
 
             visual.gameObject.name = $"{unitType} Unit ({newUnit.GetHashCode()})";
