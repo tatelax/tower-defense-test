@@ -21,9 +21,9 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   _image: {fileID: 0}
-  _powerRequired: 0
+  _powerRequired: 1
   _radius: 1
   _defense: 1
   _attackSpeed: 0
-  _strength: 0
-  _moveSpeed: 0
+  _strength: 1
+  _moveSpeed: 1

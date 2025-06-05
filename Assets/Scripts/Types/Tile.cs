@@ -10,7 +10,7 @@ namespace Types
     public GameObject GO { get; }
     public Unit Unit { get; set; }
 
-    public Tile(int x, int y, bool isWalkable, GameObject go)
+    public Tile(int x, int y, bool isWalkable, GameObject go = null)
     {
       X = x;
       Y = y;

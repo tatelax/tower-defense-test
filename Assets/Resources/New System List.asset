@@ -29,3 +29,9 @@ MonoBehaviour:
       PublicKeyToken=null
   - _typeName: Systems.HealthbarSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  - _typeName: Systems.AISpawnSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  - _typeName: Systems.AudioSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  - _typeName: Systems.UnitAnimationSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null

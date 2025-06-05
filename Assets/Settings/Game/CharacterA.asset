@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CharacterA
   m_EditorClassIdentifier: 
   _name: Character A
+  _unitType: 0
   assetReference:
     m_AssetGUID: 4012dba137c8a4f62bc6b26f089413a7
     m_SubObjectName: 
@@ -20,9 +21,9 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   _image: {fileID: 21300000, guid: 1373f3559e06f4ede8cf747883f8b387, type: 3}
-  _powerRequired: 20
+  _powerRequired: 3
   _radius: 1
   _defense: 1
   _attackSpeed: 1
-  _strength: 1
+  _strength: 10
   _moveSpeed: 3

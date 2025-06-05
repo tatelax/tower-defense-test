@@ -1,0 +1,1050 @@
+fileFormatVersion: 2
+guid: 509a67e0c67f34051bc7de68dbe03c29
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__0
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 624
+        width: 318
+        height: 377
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2555be59037e64439a75440e959cd655
+      internalID: -58060698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__1
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 697
+        width: 175
+        height: 321
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64369fb1c62474a309cdbcd0208951fd
+      internalID: 83287520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__2
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 766
+        width: 152
+        height: 240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22c77f1f45ea64a11b774962b0d3c77e
+      internalID: 1422839792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__3
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 842
+        width: 142
+        height: 168
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e79066aa7e6ce49eb87e878abb3ada0d
+      internalID: -1004853387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__4
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 905
+        width: 135
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1be39137600049e8ab44817e7f22071
+      internalID: 1891849550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__5
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 906
+        width: 47
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1550336935eb944a2874aed8246729a1
+      internalID: 437740582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__6
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 625
+        width: 232
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ddc89089272b407aa19bb3cbc19e518
+      internalID: 2054239116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__7
+      rect:
+        serializedVersion: 2
+        x: 789
+        y: 752
+        width: 193
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cca18f50cb3547b4860f54f4a8c0f16
+      internalID: -1909075371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__8
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 480
+        width: 240
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea9e01306b0b745e19eee9148db53a20
+      internalID: -1510775579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__9
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 653
+        width: 100
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc2de589a59f84b9880eba0f2c10c93a
+      internalID: -1581584687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__10
+      rect:
+        serializedVersion: 2
+        x: 481
+        y: 654
+        width: 73
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86242012aa21e4ab1b74abf4f228f29c
+      internalID: 2132942048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__11
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 577
+        width: 219
+        height: 151
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da1ee2899651b4dafae60949726f52e7
+      internalID: 1109395556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__12
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 531
+        width: 95
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 064bd46f481fa4b6d928e6a7d7b4b7ce
+      internalID: -1824279288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__13
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 520
+        width: 79
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17d4f9cf9a2c8499ab19914561273403
+      internalID: -1518470096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__14
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 511
+        width: 125
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55d253cb8b31640d7887dfee8034e1f4
+      internalID: -352687326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__15
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 512
+        width: 153
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aaa8c8d98ecde4b06b56a16bbd847b02
+      internalID: 353397055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__16
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 439
+        width: 189
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66bc044178750456c87e92132a47679c
+      internalID: -334007065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__17
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 328
+        width: 235
+        height: 184
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b970f1bf39ea441009c799fdd6ad1ab4
+      internalID: 1067004721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__18
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 337
+        width: 125
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01914406c6614482e90c143e2ee022f5
+      internalID: -735073528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__19
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 375
+        width: 123
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a08b9dadd6d6243aea5c0a0cbdfb612f
+      internalID: 332050162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__20
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 401
+        width: 142
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f31fadc0eee24f68b45d5fb54a361cd
+      internalID: 873438169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__21
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 440
+        width: 54
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2aa4e8269fcc54fd7a9ce7f61c765fb0
+      internalID: -380435455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__22
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 295
+        width: 60
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e97ede8ee7c0b45f3851145516696cb8
+      internalID: 2139599166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__23
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 297
+        width: 153
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91eab309398b345f88d6043f56bbc6f6
+      internalID: -1722911557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__24
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 353
+        width: 88
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc597989e96844c9bbc6a81a3e72425a
+      internalID: 1811061517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__25
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 216
+        width: 222
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65d5b613654f148cbac7e7c8f6de62c0
+      internalID: -1058679544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__26
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 185
+        width: 112
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a731873118ad5499ca609154ec8e0b0c
+      internalID: 1751567537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__27
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 200
+        width: 94
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e52c576b004f435580616573f69f499
+      internalID: 238857703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__28
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 224
+        width: 112
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bc8a0eb434ab43b9abae47b9e0ae937
+      internalID: 788903969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__29
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 280
+        width: 100
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6ec17fb345ea46ee8290ceaccfc5ca1
+      internalID: -409437168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__30
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 209
+        width: 112
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e24a8d18a2edc4510b7747246d69d858
+      internalID: 935154202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__31
+      rect:
+        serializedVersion: 2
+        x: 646
+        y: 211
+        width: 129
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1fd96a79fa3f4b868430862430de0b6
+      internalID: -963555078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__32
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 32
+        width: 167
+        height: 161
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 761c4020196514afc81980ccaff0d964
+      internalID: 1855375404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__33
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 1
+        width: 205
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd994367f59294445a4fdc10a3429eb8
+      internalID: 882631323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__34
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 184
+        width: 86
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5fb606d3aa5a4553a0a5ea4f328a57f
+      internalID: -867132452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__35
+      rect:
+        serializedVersion: 2
+        x: 547
+        y: 50
+        width: 103
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41257085eb8a24b33b586a6a9d8ca068
+      internalID: -984687724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__36
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 9
+        width: 286
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb7af132f0e0547e28b7363940f3c4fc
+      internalID: -1975367154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__37
+      rect:
+        serializedVersion: 2
+        x: 912
+        y: 119
+        width: 72
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 341af046be9744bca9611da4cc0e37c5
+      internalID: 1406456450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__38
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 39
+        width: 111
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d06e48eee39f4b029c9b429ef13781f
+      internalID: 901441363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: A_2D_digital_illustration_showcases_nature-themed__39
+      rect:
+        serializedVersion: 2
+        x: 945
+        y: 42
+        width: 42
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 844deb872384d4a319577b846e0efa2c
+      internalID: 485146369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 07d1f1cfe8f924c38a45a260f0e4df92
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      A_2D_digital_illustration_showcases_nature-themed__0: -58060698
+      A_2D_digital_illustration_showcases_nature-themed__1: 83287520
+      A_2D_digital_illustration_showcases_nature-themed__10: 2132942048
+      A_2D_digital_illustration_showcases_nature-themed__11: 1109395556
+      A_2D_digital_illustration_showcases_nature-themed__12: -1824279288
+      A_2D_digital_illustration_showcases_nature-themed__13: -1518470096
+      A_2D_digital_illustration_showcases_nature-themed__14: -352687326
+      A_2D_digital_illustration_showcases_nature-themed__15: 353397055
+      A_2D_digital_illustration_showcases_nature-themed__16: -334007065
+      A_2D_digital_illustration_showcases_nature-themed__17: 1067004721
+      A_2D_digital_illustration_showcases_nature-themed__18: -735073528
+      A_2D_digital_illustration_showcases_nature-themed__19: 332050162
+      A_2D_digital_illustration_showcases_nature-themed__2: 1422839792
+      A_2D_digital_illustration_showcases_nature-themed__20: 873438169
+      A_2D_digital_illustration_showcases_nature-themed__21: -380435455
+      A_2D_digital_illustration_showcases_nature-themed__22: 2139599166
+      A_2D_digital_illustration_showcases_nature-themed__23: -1722911557
+      A_2D_digital_illustration_showcases_nature-themed__24: 1811061517
+      A_2D_digital_illustration_showcases_nature-themed__25: -1058679544
+      A_2D_digital_illustration_showcases_nature-themed__26: 1751567537
+      A_2D_digital_illustration_showcases_nature-themed__27: 238857703
+      A_2D_digital_illustration_showcases_nature-themed__28: 788903969
+      A_2D_digital_illustration_showcases_nature-themed__29: -409437168
+      A_2D_digital_illustration_showcases_nature-themed__3: -1004853387
+      A_2D_digital_illustration_showcases_nature-themed__30: 935154202
+      A_2D_digital_illustration_showcases_nature-themed__31: -963555078
+      A_2D_digital_illustration_showcases_nature-themed__32: 1855375404
+      A_2D_digital_illustration_showcases_nature-themed__33: 882631323
+      A_2D_digital_illustration_showcases_nature-themed__34: -867132452
+      A_2D_digital_illustration_showcases_nature-themed__35: -984687724
+      A_2D_digital_illustration_showcases_nature-themed__36: -1975367154
+      A_2D_digital_illustration_showcases_nature-themed__37: 1406456450
+      A_2D_digital_illustration_showcases_nature-themed__38: 901441363
+      A_2D_digital_illustration_showcases_nature-themed__39: 485146369
+      A_2D_digital_illustration_showcases_nature-themed__4: 1891849550
+      A_2D_digital_illustration_showcases_nature-themed__5: 437740582
+      A_2D_digital_illustration_showcases_nature-themed__6: 2054239116
+      A_2D_digital_illustration_showcases_nature-themed__7: -1909075371
+      A_2D_digital_illustration_showcases_nature-themed__8: -1510775579
+      A_2D_digital_illustration_showcases_nature-themed__9: -1581584687
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

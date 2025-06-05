@@ -15,10 +15,6 @@ namespace Systems
         private UnitDataScriptableObject _playerBaseConfig;
         private UnitDataScriptableObject _enemyBaseConfig;
 
-        private const ushort MinimumBaseSpacing = 3;
-        private const ushort NumBases = 2;
-        private const int BaseRadius = 2;
-
         private MapSystem _mapSystem;
 
         public async UniTask Init()
@@ -33,45 +29,15 @@ namespace Systems
 
         private async UniTask PlaceBases()
         {
-            ushort playerBases = 0;
-            ushort enemyBases = 0;
-
-            // Player bases
-            for (int x = 2; x < MapSystem.SizeX && playerBases < NumBases; x++)
+            for (int i = 0; i < 2; i++)
             {
-                for (int y = 2; y < MapSystem.SizeY / 2 - 1 && playerBases < NumBases; y++)
-                {
-                    if (!_mapSystem.IsTileOpen((x, y), BaseRadius)) continue;
+                int x = 2;
+                int y = ((MapSystem.SizeY - 4) * (i % 2)) + 2;
+                var a = MapSystem.TileToWorldSpace((x, y));
+                var b = MapSystem.TileToWorldSpace((MapSystem.SizeX - x, y));
 
-                    var spawnPos = MapSystem.TileToWorldSpace((x, y));
-                    await CreateBase(spawnPos, true);
-
-                    playerBases++;
-
-                    if (playerBases < NumBases)
-                    {
-                        x += MinimumBaseSpacing;
-                    }
-                }
-            }
-
-            // Enemy bases
-            for (int x = MapSystem.SizeX - 1; x > 0 && enemyBases < NumBases; x--)
-            {
-                for (int y = MapSystem.SizeY - 1; y > 0 && enemyBases < NumBases; y--)
-                {
-                    if (!_mapSystem.IsTileOpen((x, y), BaseRadius)) continue;
-
-                    var spawnPos = MapSystem.TileToWorldSpace((x, y));
-                    await CreateBase(spawnPos, false);
-
-                    enemyBases++;
-
-                    if (enemyBases < NumBases)
-                    {
-                        x -= MinimumBaseSpacing;
-                    }
-                }
+                await CreateBase(a, i % 2 == 0);
+                await CreateBase(b, i % 2 == 0);
             }
         }
 
@@ -79,7 +45,7 @@ namespace Systems
         {
             var option = isPlayerOwned ? _playerBaseConfig : _enemyBaseConfig;
             var visual = await SpawnUnitHelper.SpawnVisual(option, pos);
-            _mapSystem.CreateUnit(visual, isPlayerOwned, option);
+            _ = _mapSystem.CreateUnit(visual, isPlayerOwned, option);
         }
     }
 }

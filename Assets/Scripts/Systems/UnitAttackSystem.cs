@@ -8,10 +8,12 @@ namespace Systems
   public class UnitAttackSystem : ISystem
   {
     private MapSystem _mapSystem;
+    private AudioSystem _audioSystem;
     
     public async UniTask Init()
     {
       _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
+      _audioSystem = await Orchestrator.Orchestrator.GetSystemAsync<AudioSystem>();
     }
 
     public void Update()
@@ -23,11 +25,9 @@ namespace Systems
 
         if (unit.CurrAttackTimer <= 0)
         {
-          Debug.Log("Attacking");
-          
           _mapSystem.AttackTarget(unit);
-          
           unit.CurrAttackTimer = unit.Data.AttackSpeed;
+          _audioSystem.Play(Sound.Attack);
         }
 
         unit.CurrAttackTimer -= Time.deltaTime;

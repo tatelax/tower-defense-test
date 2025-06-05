@@ -2,8 +2,9 @@ namespace Types
 {
   public enum UnitState
   {
-    Idle,
-    Navigating,
-    Attacking
+    Idle = 0,
+    Navigating = 1,
+    Attacking = 2,
+    Dead = 3
   }
 }

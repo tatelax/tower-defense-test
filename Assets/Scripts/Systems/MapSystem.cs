@@ -11,23 +11,24 @@ namespace Systems
 {
     public class MapSystem : ISystem
     {
-        public const int SizeX = 17;
-        public const int SizeY = 31;
+        public const int SizeX = 9;
+        public const int SizeY = 15;
 
         public HashSet<Unit> Units { get; private set; }
         public Tile[,] Map { get; } = new Tile[SizeX, SizeY];
 
-        private const string GroundSpriteAddress = "GroundTiles";
-        private const string DetailSpriteAddress = "Assets/Art/kenney_tiny-town/Tiles/tile_0106.png";
-        private const float BlockedChance = 0.11f;
-
-        private readonly GameObject[,] _tileGos = new GameObject[SizeX, SizeY];
+        private const string BlockingSpriteAddress = "Assets/Sprites/A_2D_digital_illustration_showcases_a_square_pool_.png";
+        private const float BlockedChance = 0.2f;
 
         private readonly System.Random rng = new();
 
+        private AudioSystem _audioSystem;
+        
         public async UniTask Init()
         {
-            Debug.Assert(SizeX % 2 != 0 && SizeY % 2 != 0, "SizeX % 2 != 0 && SizeY % 2 != 0");
+            Debug.Assert(SizeX % 2 != 0 && SizeY % 2 != 0, "Width and height should be odd numbers");
+            
+            _audioSystem = await Orchestrator.Orchestrator.GetSystemAsync<AudioSystem>();
             
             Units = new ();
             await GenerateMap();
@@ -35,8 +36,7 @@ namespace Systems
 
         private async UniTask GenerateMap()
         {
-            var groundSprites = await Addressables.LoadAssetsAsync<Sprite>(GroundSpriteAddress);
-            var detailSprite = await Addressables.LoadAssetAsync<Sprite>(DetailSpriteAddress);
+            var blockingSprite = await Addressables.LoadAssetAsync<Sprite>(BlockingSpriteAddress);
 
             var parent = new GameObject($"Map [{SizeX}, {SizeY}]").transform;
         
@@ -44,45 +44,54 @@ namespace Systems
             {
                 for (int y = 0; y < SizeY; y++)
                 {
-                    var go = new GameObject($"{x},{y}", typeof(SpriteRenderer));
-                    go.transform.parent = parent;
-                    var renderer = go.GetComponent<SpriteRenderer>();
-                    var pos = new Vector3(x - SizeX / 2, 0, y - SizeY / 2);
-                    var rot = new Vector3(90, 0, 0);
-                    var quat = Quaternion.Euler(rot);
-                    go.transform.SetPositionAndRotation(pos, quat);
-                    renderer.sprite = groundSprites[rng.Next(0, groundSprites.Count - 1)];
-                    _tileGos[x, y] = go;
-
                     bool isWalkable;
+                    var pos = new Vector3(x - SizeX / 2, 0, y - SizeY / 2);
 
+                    // Make border unwalkable
                     if (x == 0 || y == 0 || x == SizeX - 1 || y == SizeY - 1)
                     {
-                        renderer.color = Color.magenta;
+                        // var edge = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        // edge.transform.position = pos;
                         isWalkable = false;
                     }
                     else
                     {
                         isWalkable = rng.NextDouble() > BlockedChance;
 
-                        if (!isWalkable)
+                        if (!isWalkable && y is > 3 and < SizeY - 3)
                         {
                             var detailGo = new GameObject($"{x},{y}", typeof(SpriteRenderer));
                             detailGo.transform.parent = parent;
                             var detailRenderer = detailGo.GetComponent<SpriteRenderer>();
+                            var rot = new Vector3(90, 0, 0);
+                            var quat = Quaternion.Euler(rot);
                             detailGo.transform.SetPositionAndRotation(pos, quat);
-                            detailRenderer.sprite = detailSprite;
+                            detailRenderer.sprite = blockingSprite;
                             detailRenderer.sortingOrder = 1;
                         }
                     }
                 
-                    Map[x, y] = new Tile(x, y, isWalkable, go);
+                    Map[x, y] = new Tile(x, y, isWalkable);
                 }
             }
         
-            Addressables.Release(groundSprites);
-            Addressables.Release(detailSprite);
+            Addressables.Release(blockingSprite);
         }
+
+#if UNITY_EDITOR
+        public void Update()
+        {
+            for (int x = 0; x < SizeX; x++)
+            {
+                Debug.DrawLine(TileToWorldSpace((x, 0)), TileToWorldSpace((x, SizeY - 1)), Color.cyan);
+            }
+            
+            for (int y = 0; y < SizeY; y++)
+            {
+                Debug.DrawLine(TileToWorldSpace((0, y)), TileToWorldSpace((SizeX - 1, y)), Color.cyan);
+            }
+        }     
+#endif
 
         public List<(int x, int y)> GetTilesCovered((int x, int y) center, int radius)
         {
@@ -171,6 +180,8 @@ namespace Systems
                 // TODO: Pooling
                 Addressables.Release(unit.Target.Visual.gameObject);
 
+                _audioSystem.Play(Sound.Die);
+                
                 Run().Forget();
                 async UniTask Run()
                 {

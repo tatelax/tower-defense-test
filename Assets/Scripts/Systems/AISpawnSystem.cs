@@ -10,14 +10,14 @@ namespace Systems
 {
   public class AISpawnSystem: ISystem
   {
-    private const float SpawnInterval = 1f;
+    private const float SpawnInterval = 10f;
     
     private MapSystem _mapSystem;
     private CharacterButton[] _characters;
 
     private float spawnTimer;
     
-    private async UniTask Init()
+    public async UniTask Init()
     {
       _mapSystem = await Orchestrator.Orchestrator.GetSystemAsync<MapSystem>();
       var uiSystem = await Orchestrator.Orchestrator.GetSystemAsync<UISystem>();
@@ -29,7 +29,7 @@ namespace Systems
 
     public void Update()
     {
-      spawnTimer -= SpawnInterval * Time.deltaTime;
+      spawnTimer -= Time.deltaTime;
 
       if (spawnTimer >= 0f)
         return;
