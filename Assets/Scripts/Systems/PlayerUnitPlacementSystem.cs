@@ -13,6 +13,7 @@ namespace Systems
 {
   public class PlayerUnitPlacementSystem : ISystem
   {
+    private const float DragHeight = 4.0f;
     private const float DragSpeed = 20.0f;
     
     private MapSystem _mapSystem;
@@ -54,8 +55,8 @@ namespace Systems
       if (_currentUnitVisual is null)
         return;
 
-      _currentUnitVisual.transform.DOScale(Vector3.one, 0.2f);
-      _currentUnitVisual.transform.DOMoveY(1, 0.2f).SetEase(Ease.InOutElastic).onComplete += () =>
+      _currentUnitVisual.transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutExpo);
+      _currentUnitVisual.transform.DOMoveY(0, 0.2f).SetEase(Ease.OutExpo).onComplete += () =>
       {
         var characterData = _ui.CharacterButtons.First(b => b.UnitData.Name == id).UnitData;
         var newUnit = _mapSystem.CreateUnit(_currentUnitVisual, true, characterData);
@@ -63,6 +64,7 @@ namespace Systems
         if (newUnit == null)
         {
           Addressables.Release(_currentUnitVisual.gameObject);
+          _audioSystem.Play(Sound.Delete);
         }
         else
         {
@@ -92,20 +94,12 @@ namespace Systems
 
     private Vector3 GetDragPosInWorldSpace()
     {
-      Camera cam = Camera.main;
-      Vector3 mouseScreen = Input.mousePosition;
-    
-      // Distance from camera Y to desired Y (which is 1)
-      float desiredY = 4f;
-      float camY = cam.transform.position.y;
-      float distance = camY - desiredY; // should be positive if camera is above the plane
-    
-      // Use screen X and Y, but set Z to the distance above the plane at Y=1
-      mouseScreen.z = distance;
-      Vector3 world = cam.ScreenToWorldPoint(mouseScreen);
-
-      // Snap or round as needed (for grid)
-      return new Vector3(Mathf.RoundToInt(world.x), desiredY, Mathf.RoundToInt(world.z));
+      Vector3 world = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+      (int, int) tilePos = MapSystem.WorldToTileSpace(world);
+      Vector3 snappedWorld = MapSystem.TileToWorldSpace(tilePos);
+      snappedWorld.y = DragHeight;
+      
+      return snappedWorld;
     }
   }
 }

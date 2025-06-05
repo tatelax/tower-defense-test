@@ -182,7 +182,7 @@ public static class FastPathfinder
             }
         }
 
-        UnityEngine.Debug.LogWarning($"[Pathfinder] No path found from {start} to {goal}.");
+        Debug.LogWarning($"[Pathfinder] No path found from {start} to {goal}.");
         return 0;
     }
 

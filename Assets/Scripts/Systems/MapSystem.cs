@@ -18,7 +18,9 @@ namespace Systems
         public Tile[,] Map { get; } = new Tile[SizeX, SizeY];
 
         private const string BlockingSpriteAddress = "Assets/Sprites/A_2D_digital_illustration_showcases_a_square_pool_.png";
-        private const float BlockedChance = 0.2f;
+        private const float noiseScale = 10f; // Lower = bigger clusters
+        private const float detailThreshold = 0.5f; // [0,1]
+        private const float detailDensity = 1f;
 
         private readonly System.Random rng = new();
 
@@ -44,21 +46,21 @@ namespace Systems
             {
                 for (int y = 0; y < SizeY; y++)
                 {
-                    bool isWalkable;
+                    bool isWalkable = true;
                     var pos = new Vector3(x - SizeX / 2, 0, y - SizeY / 2);
 
-                    // Make border unwalkable
-                    if (x == 0 || y == 0 || x == SizeX - 1 || y == SizeY - 1)
+                    if(y is > 3 and < SizeY - 3)
                     {
-                        // var edge = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        // edge.transform.position = pos;
-                        isWalkable = false;
-                    }
-                    else
-                    {
-                        isWalkable = rng.NextDouble() > BlockedChance;
+                        float nx = x / noiseScale;
+                        float ny = y / noiseScale;
+                        float noiseValue = Mathf.PerlinNoise(nx, ny);
 
-                        if (!isWalkable && y is > 3 and < SizeY - 3)
+                        if (noiseValue > detailThreshold)
+                        {
+                            isWalkable = false;
+                        }
+
+                        if (!isWalkable)
                         {
                             var detailGo = new GameObject($"{x},{y}", typeof(SpriteRenderer));
                             detailGo.transform.parent = parent;
@@ -113,7 +115,7 @@ namespace Systems
             return tiles;
         }
 
-        public void PlaceUnit(Unit unit, (int x, int y) pos)
+        public bool PlaceUnit(Unit unit, (int x, int y) pos)
         {
             var newTiles = GetTilesCovered(pos, unit.Data.Radius);
             var oldTiles = GetTilesCovered(unit.CurrTile, unit.Data.Radius);
@@ -129,7 +131,7 @@ namespace Systems
                 if (!IsWalkable(tile) || (Map[tile.x, tile.y].Unit != null && Map[tile.x, tile.y].Unit != unit))
                 {
                     Debug.LogError($"Failed to place unit {unit.GetHashCode()} at {tile} (radius {unit.Data.Radius})");
-                    return;
+                    return false;
                 }
             }
 
@@ -138,6 +140,8 @@ namespace Systems
 
             unit.CurrTile = pos;
             Debug.Log($"placed at {pos}. IsWalkable = {Map[pos.x, pos.y].IsWalkable}");
+
+            return true;
         }
 
         public Unit CreateUnit(UnitVisual visual, bool isPlayerOwned, UnitDataScriptableObject stats)
@@ -208,10 +212,14 @@ namespace Systems
         {
             int tileX = Mathf.RoundToInt(world.x) + (SizeX - 1) / 2;
             int tileY = Mathf.RoundToInt(world.z) + (SizeY - 1) / 2;
+            
+            tileX = Mathf.Clamp(tileX, 0, SizeX - 1);
+            tileY = Mathf.Clamp(tileY, 0, SizeY - 1);
+            
             return (tileX, tileY);
         }
 
-        public static Vector3 TileToWorldSpace((int x, int y) pos, float worldY = 1f)
+        public static Vector3 TileToWorldSpace((int x, int y) pos, float worldY = 0f)
         {
             float worldX = pos.x - (SizeX - 1) / 2f;
             float worldZ = pos.y - (SizeY - 1) / 2f;

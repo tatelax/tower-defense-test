@@ -15,23 +15,34 @@ MonoBehaviour:
   systemTypeReferences:
   - _typeName: Systems.MapSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.BaseSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.UISystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.UnitAISystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.PlayerUnitPlacementSystem, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.UnitAttackSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.PowerbarSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.HealthbarSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.AISpawnSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 0
   - _typeName: Systems.AudioSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1
   - _typeName: Systems.UnitAnimationSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    _enabled: 1

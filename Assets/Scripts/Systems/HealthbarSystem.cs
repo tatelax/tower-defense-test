@@ -18,7 +18,14 @@ namespace Systems
       {
         if (unit.Visual?.HealthBar is null)
           continue;
-        
+
+        if (unit.CurrHealth >= 100f)
+        {
+          unit.Visual.HealthBar.gameObject.SetActive(false);
+          continue;
+        }
+
+        unit.Visual.HealthBar.gameObject.SetActive(true);
         unit.Visual.HealthBar.value = unit.CurrHealth / 100;
       }
     }

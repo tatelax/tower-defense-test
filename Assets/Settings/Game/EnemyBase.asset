@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Enemy Base
   _unitType: 1
   assetReference:
-    m_AssetGUID: 4241b67160c024cfa9f7531eda86bcaf
+    m_AssetGUID: 57ace18f51b8e4af4bac1665155b537f
     m_SubObjectName: 
     m_SubObjectType: 
     m_SubObjectGUID: 

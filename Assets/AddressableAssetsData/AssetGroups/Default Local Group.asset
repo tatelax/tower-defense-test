@@ -31,7 +31,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4241b67160c024cfa9f7531eda86bcaf
-    m_Address: Assets/Prefabs/Base.prefab
+    m_Address: Assets/Prefabs/Bases/PlayerBase.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 57ace18f51b8e4af4bac1665155b537f
+    m_Address: Assets/Prefabs/Bases/EnemyBase.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

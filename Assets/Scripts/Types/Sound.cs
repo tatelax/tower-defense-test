@@ -9,6 +9,7 @@ namespace Types
     Attack,
     Die,
     BaseDie,
-    Create
+    Create,
+    Delete
   }
 }

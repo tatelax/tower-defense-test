@@ -51,13 +51,20 @@ namespace Systems
                 {
                     if (tileVisualIsIn != unit.CurrTile)
                     {
-                        _mapSystem.PlaceUnit(unit, tileVisualIsIn);
+                        if (!_mapSystem.PlaceUnit(unit, tileVisualIsIn))
+                        {
+                            unit.Visual.transform.position = MapSystem.TileToWorldSpace(unit.CurrTile);
+                        }
                     }
 
                     int pathLen = FastPathfinder.FindPath(_mapSystem, unit, unit.CurrTile, unit.Target.CurrTile, unit.CurrentPathBuffer, true);
-                    
-                    if (pathLen < 2)
+
+                    if (pathLen == 0)
+                    {
+                        unit.SetState(UnitState.Idle);
                         continue;
+                    }
+
                     
                     Vector3[] pathWorldSpace = new Vector3[pathLen];
                     
