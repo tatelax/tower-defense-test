@@ -195,14 +195,16 @@ namespace Systems
             }
         }
 
-        public bool IsTileOpen((int x, int y) pos, int radius = 1)
+        public bool IsTileOpen((int x, int y) pos, int radius = 1, Unit ignoreUnit = null)
         {
             var tiles = GetTilesCovered(pos, radius);
             foreach (var tile in tiles)
             {
                 if (tile.x < 0 || tile.x >= SizeX || tile.y < 0 || tile.y >= SizeY)
                     return false;
-                if (!IsWalkable(tile) || Map[tile.x, tile.y].Unit != null)
+                if (!IsWalkable(tile))
+                    return false;
+                if(Map[tile.x, tile.y].Unit is not null && Map[tile.x, tile.y].Unit != ignoreUnit)
                     return false;
             }
             return true;

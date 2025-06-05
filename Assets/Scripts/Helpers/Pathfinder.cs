@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using Types;
 using Systems;
 using UnityEngine;
-using System.Linq;
 
 public static class FastPathfinder
 {
@@ -26,7 +24,6 @@ public static class FastPathfinder
     private static bool[,] closed;
     private static int[,] cameFrom;
 
-    // 8-way
     private static readonly (int dx, int dy)[] Directions = new (int, int)[]
     {
         (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1), (-1,0), (-1,1)
@@ -37,55 +34,13 @@ public static class FastPathfinder
         Unit unit,
         (int x, int y) start,
         (int x, int y) goal,
-        (int x, int y)[] outPath,
-        bool excludeLastTile = false
+        (int x, int y)[] outPath
     )
     {
         int width = MapSystem.SizeX;
         int height = MapSystem.SizeY;
+        int goalX = goal.x, goalY = goal.y;
 
-        // --- New logic: Is goal tile occupied by another unit? If so, find closest edge tile instead ---
-        Unit goalUnit = null;
-        if (goal.x >= 0 && goal.x < width && goal.y >= 0 && goal.y < height)
-            goalUnit = mapSystem.Map[goal.x, goal.y].Unit;
-        bool goalBlockedByOtherUnit = goalUnit != null && goalUnit != unit;
-
-        (int x, int y) newGoal = goal;
-        if (goalBlockedByOtherUnit)
-        {
-            // Get all tiles covered by the goal unit
-            var covered = mapSystem.GetTilesCovered(goalUnit.CurrTile, goalUnit.Data.Radius);
-            var coveredSet = new HashSet<(int, int)>(covered);
-
-            // Find all unique neighbor tiles around the covered tiles
-            var candidateTiles = new HashSet<(int, int)>();
-            foreach (var (x, y) in covered)
-            {
-                foreach (var (dx, dy) in Directions)
-                {
-                    (int x, int y) neighbor = (x + dx, y + dy);
-                    if (neighbor.x < 0 || neighbor.x >= width || neighbor.y < 0 || neighbor.y >= height)
-                        continue;
-                    // Must NOT be inside the covered area, must be open for our unit
-                    if (!coveredSet.Contains(neighbor) && mapSystem.IsTileOpen(neighbor, unit.Data.Radius))
-                    {
-                        candidateTiles.Add(neighbor);
-                    }
-                }
-            }
-
-            // If no candidates found, pathfinding will fail as expected
-            if (candidateTiles.Count > 0)
-            {
-                // Find the candidate closest to the original goal tile (can change to closest to start if you want)
-                newGoal = candidateTiles
-                    .OrderBy(tile => Heuristic(tile.Item1, tile.Item2, goal.x, goal.y))
-                    .First();
-            }
-            // else newGoal remains goal, but there is nowhere legal to stand
-        }
-
-        // --- Normal A* logic below ---
         if (closed == null || closed.GetLength(0) != width || closed.GetLength(1) != height)
         {
             closed = new bool[width, height];
@@ -96,40 +51,30 @@ public static class FastPathfinder
         openCount = 0;
         int nodeCount = 0;
 
-        int goalX = newGoal.x, goalY = newGoal.y;
-        int unitRadius = unit.Data.Radius;
-
         nodePool[0].Set(start.x, start.y, 0, Heuristic(start.x, start.y, goalX, goalY), -1);
         openHeap[openCount++] = 0;
         cameFrom[start.x, start.y] = -1;
         nodeCount = 1;
+
+        // Track the closest node to the goal we've reached (by heuristic)
+        int closestNodeIndex = 0;
+        int closestNodeH = nodePool[0].h;
 
         while (openCount > 0)
         {
             int currentIndex = PopMinHeap();
             Node current = nodePool[currentIndex];
 
+            // Update closest if necessary
+            if (current.h < closestNodeH)
+            {
+                closestNodeIndex = currentIndex;
+                closestNodeH = current.h;
+            }
+
             if (current.x == goalX && current.y == goalY)
             {
-                int len = 0;
-                int n = currentIndex;
-                while (n >= 0 && len < outPath.Length)
-                {
-                    outPath[len++] = (nodePool[n].x, nodePool[n].y);
-                    n = nodePool[n].parentIndex;
-                }
-                // Reverse
-                for (int i = 0; i < len / 2; i++)
-                {
-                    var tmp = outPath[i];
-                    outPath[i] = outPath[len - i - 1];
-                    outPath[len - i - 1] = tmp;
-                }
-                if (excludeLastTile && len > 1)
-                {
-                    len -= 1;
-                }
-                return len;
+                return ReconstructPath(currentIndex, outPath);
             }
 
             closed[current.x, current.y] = true;
@@ -148,12 +93,12 @@ public static class FastPathfinder
                 {
                     int x1 = current.x + dx, y1 = current.y;
                     int x2 = current.x, y2 = current.y + dy;
-                    if (!(IsWalkableWithGoalCheck(mapSystem, (x1, y1), unit, (goalX, goalY)) &&
-                          IsWalkableWithGoalCheck(mapSystem, (x2, y2), unit, (goalX, goalY))))
+                    if (!(IsWalkable(mapSystem, (x1, y1), unit) &&
+                          IsWalkable(mapSystem, (x2, y2), unit)))
                         continue;
                 }
 
-                if (!IsWalkableWithGoalCheck(mapSystem, (nx, ny), unit, (goalX, goalY)))
+                if (!IsWalkable(mapSystem, (nx, ny), unit))
                     continue;
 
                 int g = current.g + ((dx == 0 || dy == 0) ? 10 : 14);
@@ -182,29 +127,39 @@ public static class FastPathfinder
             }
         }
 
+        // If we get here, we never reached the goal
+        if (closestNodeIndex != -1 && (nodePool[closestNodeIndex].x != start.x || nodePool[closestNodeIndex].y != start.y))
+        {
+            Debug.LogWarning($"[Pathfinder] Goal not reachable; returning path to closest walkable tile at ({nodePool[closestNodeIndex].x}, {nodePool[closestNodeIndex].y})");
+            return ReconstructPath(closestNodeIndex, outPath);
+        }
+
         Debug.LogWarning($"[Pathfinder] No path found from {start} to {goal}.");
         return 0;
     }
 
-    /// <summary>
-    /// Returns false if the candidate pos is not open for this unit's radius,
-    /// OR if the candidate is the goal tile and overlaps another unit.
-    /// </summary>
-    private static bool IsWalkableWithGoalCheck(MapSystem mapSystem, (int x, int y) pos, Unit movingUnit, (int x, int y) goal)
+    private static int ReconstructPath(int nodeIndex, (int x, int y)[] outPath)
     {
-        if (!mapSystem.IsTileOpen(pos, movingUnit.Data.Radius))
-            return false;
-        if (pos == goal)
+        int len = 0;
+        int n = nodeIndex;
+        while (n >= 0 && len < outPath.Length)
         {
-            var tiles = mapSystem.GetTilesCovered(pos, movingUnit.Data.Radius);
-            foreach (var tile in tiles)
-            {
-                var u = mapSystem.Map[tile.x, tile.y].Unit;
-                if (u != null && u != movingUnit)
-                    return false;
-            }
+            outPath[len++] = (nodePool[n].x, nodePool[n].y);
+            n = nodePool[n].parentIndex;
         }
-        return true;
+        // Reverse
+        for (int i = 0; i < len / 2; i++)
+        {
+            var tmp = outPath[i];
+            outPath[i] = outPath[len - i - 1];
+            outPath[len - i - 1] = tmp;
+        }
+        return len;
+    }
+
+    private static bool IsWalkable(MapSystem mapSystem, (int x, int y) pos, Unit movingUnit)
+    {
+        return mapSystem.IsTileOpen(pos, movingUnit.Data.Radius, movingUnit);
     }
 
     private static int Heuristic(int x1, int y1, int x2, int y2)

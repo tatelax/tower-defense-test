@@ -57,7 +57,7 @@ namespace Systems
                         }
                     }
 
-                    int pathLen = FastPathfinder.FindPath(_mapSystem, unit, unit.CurrTile, unit.Target.CurrTile, unit.CurrentPathBuffer, true);
+                    int pathLen = FastPathfinder.FindPath(_mapSystem, unit, unit.CurrTile, unit.Target.CurrTile, unit.CurrentPathBuffer);
 
                     if (pathLen == 0)
                     {
